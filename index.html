@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Получить плейлист</title>
+    <title>Вход и Регистрация</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
     
     <style>
@@ -27,8 +27,33 @@
             box-sizing: border-box;
             color: #333;
         }
+        
+        /* КНОПКИ В ПРАВОМ ВЕРХНЕМ УГЛУ */
+        .auth-buttons-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 110;
+        }
+        
+        .auth-btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(0, 123, 255, 0.8);
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        
+        .auth-btn:hover {
+            background: var(--system-blue);
+        }
 
-        /* Контейнер формы */
+        /* Контейнер формы (для центрирования на странице) */
         .form-container {
             background: #ffffff;
             padding: 40px;
@@ -36,12 +61,7 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
             max-width: 450px;
             width: 100%;
-            animation: fadeInScale 0.6s ease-out;
-        }
-
-        @keyframes fadeInScale {
-            from { opacity: 0; transform: scale(0.95); }
-            to { transform: scale(1); opacity: 1; }
+            display: none;
         }
 
         h1 {
@@ -52,13 +72,11 @@
             font-size: 24px;
         }
 
-        /* Группа для ввода */
         .input-group-modern {
             position: relative;
             margin-bottom: 35px;
         }
 
-        /* Поле ввода */
         .input-group-modern input {
             width: 100%;
             padding: 15px 10px 5px 10px;
@@ -76,7 +94,6 @@
             border-bottom-color: var(--system-blue);
         }
 
-        /* Плавающая метка (label) */
         .input-group-modern label {
             position: absolute;
             top: 15px;
@@ -95,7 +112,6 @@
             color: var(--system-blue);
         }
 
-        /* Кнопка */
         .submit-btn-modern {
             width: 100%;
             padding: 15px;
@@ -122,8 +138,27 @@
             transform: translateY(0);
             box-shadow: 0 2px 10px rgba(0, 123, 255, 0.4);
         }
-
-        /* Модальное окно для результата */
+        
+        .status-message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 15px;
+            display: none;
+        }
+        
+        .status-message.success {
+            background-color: #e6ffe6;
+            color: var(--system-green);
+        }
+        
+        .status-message.error {
+            background-color: #ffe6e6;
+            color: var(--system-red);
+        }
+        
+        /* Стили для модальных окон */
         .modal {
             display: none;
             position: fixed;
@@ -136,6 +171,7 @@
             justify-content: center;
             align-items: center;
             padding: 20px 0;
+            overflow-y: auto;
         }
         
         .modal-content {
@@ -145,6 +181,7 @@
             border-radius: 14px;
             padding: 25px;
             animation: modalOpen 0.3s ease-out;
+            position: relative;
         }
         
         @keyframes modalOpen {
@@ -169,8 +206,13 @@
             font-size: 28px;
             cursor: pointer;
             line-height: 1;
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            color: #666;
         }
 
+        /* Дополнительные стили для модального окна результата плейлиста */
         .link-result-link {
             background: var(--system-gray-light);
             padding: 15px;
@@ -185,114 +227,143 @@
         .link-result-actions {
             display: flex;
             gap: 12px;
+            flex-direction: column;
         }
         
         .link-result-actions button {
-            flex: 1;
-            font-size: 16px;
-            padding: 12px;
+            width: 100%;
+            font-size: 18px;
+            padding: 15px;
             border-radius: 8px;
         }
 
-        .status-message {
-            margin-top: 15px;
-            padding: 10px;
-            border-radius: 6px;
-            text-align: center;
-            font-size: 15px;
-            display: none;
-        }
-        
-        .status-message.success {
-            background-color: #e6ffe6;
-            color: var(--system-green);
-        }
-        
-        .status-message.error {
-            background-color: #ffe6e6;
-            color: var(--system-red);
-        }
     </style>
 </head>
 <body>
 
-    <div class="form-container">
-        <form class="modern-form" onsubmit="return false;">
-            <h1>Получите ваш плейлист! 🎶</h1>
-
-            <div class="input-group-modern">
-                <input type="text" id="clientName" required placeholder=" ">
-                <label for="clientName">Ваше имя</label>
-            </div>
-
-            <div class="input-group-modern">
-                <input type="text" id="clientPhone" required placeholder=" ">
-                <label for="clientPhone">Номер телефона (свободный ввод)</label>
-            </div>
-
-            <button type="submit" class="submit-btn-modern" id="getPlaylistBtn">
-                Получить плейлист
-            </button>
-            <div id="playlistStatus" class="status-message"></div>
-        </form>
+    <div class="auth-buttons-container">
+        <button class="auth-btn" onclick="openModal('registrationModal')">Регистрация</button>
+        <button class="auth-btn" onclick="openModal('loginModal')">Вход</button>
     </div>
+
+    <div style="text-align: center; opacity: 0.5;">
+        <h1 style="color: #666;">Добро пожаловать</h1>
+        <p>Для доступа к плейлистам войдите или зарегистрируйтесь.</p>
+    </div>
+
+
+    <div id="registrationModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('registrationModal')">×</span>
+            <h1>Регистрация</h1>
+
+            <form id="registrationForm" onsubmit="return false;">
+                <div class="input-group-modern">
+                    <input type="text" id="clientName" required placeholder=" ">
+                    <label for="clientName">Ваше имя</label>
+                </div>
+
+                <div class="input-group-modern">
+                    <input type="tel" id="clientPhone" required placeholder=" ">
+                    <label for="clientPhone">Номер телефона</label>
+                </div>
+
+                <div class="input-group-modern">
+                    <input type="password" id="clientPassword" required placeholder=" ">
+                    <label for="clientPassword">Пароль</label>
+                </div>
+
+                <div class="input-group-modern">
+                    <input type="password" id="clientPasswordRepeat" required placeholder=" ">
+                    <label for="clientPasswordRepeat">Повторите пароль</label>
+                </div>
+
+                <button type="submit" class="submit-btn-modern" id="registerBtn">
+                    Зарегистрироваться
+                </button>
+                <div id="statusMessage" class="status-message"></div>
+            </form>
+        </div>
+    </div>
+
+
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('loginModal')">×</span>
+            <h2 style="text-align: center; margin-bottom: 20px;">Вход</h2>
+            <form id="loginForm" onsubmit="return false;">
+                <div class="input-group-modern">
+                    <input type="tel" id="loginPhone" required placeholder=" ">
+                    <label for="loginPhone">Номер телефона</label>
+                </div>
+                <div class="input-group-modern">
+                    <input type="password" id="loginPassword" required placeholder=" ">
+                    <label for="loginPassword">Пароль</label>
+                </div>
+                <button type="submit" id="loginBtn" class="submit-btn-modern">Войти</button>
+            </form>
+            <div id="loginStatusMessage" class="status-message"></div>
+        </div>
+    </div>
+
 
     <div id="linkDisplayModal" class="modal">
         <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('linkDisplayModal')">×</span>
             <div class="modal-header">
-                <h2>Ссылка на плейлист</h2>
-                <span class="close-btn" onclick="closeModal('linkDisplayModal')">×</span>
+                <h2>Ваш плейлист</h2>
             </div>
             
-            <div class="link-result-content">
-                <h3>Ваша короткая ссылка:</h3>
+            <div class="link-result-content" style="text-align: center;">
+                <h3 style="margin-top: 0;">Короткая ссылка:</h3>
                 <div class="link-result-link" id="finalPlaylistLink">Загрузка...</div>
             </div>
             
             <div class="link-result-actions">
                 <button id="copyLinkBtn" style="background: var(--system-blue);" class="secondary">Копировать ссылку</button>
-                <button id="downloadLinkBtn" style="background: #ccc; color: #333;">Скачать файл</button>
+                <button id="downloadLinkBtn" style="background: var(--system-green); color: white;">Скачать файл</button>
             </div>
         </div>
     </div>
 
+
     <script>
         // =================================================================
-        // КОНФИГУРАЦИЯ И АВТОРИЗАЦИЯ (Взято из index (1).html)
+        // КОНФИГУРАЦИЯ GITHUB И VERCEL
         // =================================================================
         
-        // РЕАЛЬНЫЕ ДАННЫЕ ИЗ ВАШЕГО ФАЙЛА index (1).html
+        // ВАШ ТОКЕН И ДАННЫЕ РЕПОЗИТОРИЯ
         const TOKEN_PARTS = ["ghp_to27A4", "Q0SrXyfBANG1", "fxQvzyhhgwrn0rm1ra"];
         const REPO_CONFIG = {
             owner: "kyiv14",
             repo: "moe-iptv",
             branch: "main",
             clientsFile: "public/clients.json",
-            // Предполагаемый путь к sample.m3u на Vercel
             samplePlaylist: "https://moe-iptv.vercel.app/sample.m3u", 
-            // Предполагаемый базовый URL для генерации ссылок
             baseUrl: "https://moe-iptv.vercel.app/"
         };
         
-        // Учетные данные для сохранения
-        let clients = []; 
+        // Переменные для хранения данных после регистрации/входа
+        let currentClientData = null; 
+        let currentPlaylistResult = null;
         
         function getGitHubToken() {
             return TOKEN_PARTS.join('');
         }
 
         // =================================================================
-        // ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ (Адаптированы из index (1).html)
+        // ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
         // =================================================================
 
-        // Функция для извлечения последних 10 цифр номера телефона (нужна для имени файла)
         function extractPhoneNumber(phone) {
             const digits = phone.replace(/\D/g, '');
-            // Берем только последние 10 цифр, как в оригинальной логике
             return digits.slice(-10);
         }
 
         function openModal(modalId) {
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.style.display = 'none';
+            });
             document.getElementById(modalId).style.display = 'flex';
         }
 
@@ -300,7 +371,7 @@
             document.getElementById(modalId).style.display = 'none';
         }
 
-        function showStatus(message, type, elementId = 'playlistStatus') {
+        function showStatus(message, type, elementId = 'statusMessage') {
             const statusEl = document.getElementById(elementId);
             statusEl.innerHTML = message;
             statusEl.className = 'status-message ' + type;
@@ -336,12 +407,13 @@
 
 
         // =================================================================
-        // ЛОГИКА GITHUB/API (Адаптировано из index (1).html)
+        // ЛОГИКА GITHUB/API
         // =================================================================
-
+        
+        // ** ИСПРАВЛЕННАЯ ФУНКЦИЯ **: Получает SHA конкретного файла (для .m3u или .json)
         async function getFileSha(filename) {
+            const apiUrl = `https://api.github.com/repos/${REPO_CONFIG.owner}/${REPO_CONFIG.repo}/contents/${filename}`;
             try {
-                const apiUrl = `https://api.github.com/repos/${REPO_CONFIG.owner}/${REPO_CONFIG.repo}/contents/${filename}`;
                 const response = await fetch(apiUrl, {
                     headers: {
                         'Authorization': `Bearer ${getGitHubToken()}`,
@@ -352,47 +424,73 @@
                     const data = await response.json();
                     return data.sha;
                 }
-                return null;
+                // Если файл не существует (404), возвращаем null (для создания нового)
+                if (response.status === 404) {
+                    return null;
+                }
+                throw new Error(`Ошибка при получении SHA: ${response.statusText}`);
             } catch (error) {
-                return null;
+                console.error('Ошибка при получении SHA:', error);
+                return null; 
+            }
+        }
+
+        async function loadClientsFromGitHub() {
+            const filename = REPO_CONFIG.clientsFile;
+            const apiUrl = `https://api.github.com/repos/${REPO_CONFIG.owner}/${REPO_CONFIG.repo}/contents/${filename}`;
+            try {
+                const response = await fetch(apiUrl, {
+                    headers: {
+                        'Authorization': `Bearer ${getGitHubToken()}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    const content = decodeURIComponent(escape(atob(data.content)));
+                    const clients = JSON.parse(content) || [];
+                    return { clients, sha: data.sha };
+                }
+                if (response.status === 404) {
+                    return { clients: [], sha: null };
+                }
+                throw new Error(`Ошибка загрузки: ${response.statusText}`);
+            } catch (error) {
+                throw error;
             }
         }
 
         async function createIsGdShortUrl(phone) {
+            const cleanPhone = extractPhoneNumber(phone);
+            const longUrl = `${REPO_CONFIG.baseUrl}${cleanPhone}.m3u`;
             try {
-                const cleanPhone = extractPhoneNumber(phone);
-                const longUrl = `${REPO_CONFIG.baseUrl}${cleanPhone}.m3u`;
-                
                 const apiUrl = `https://is.gd/create.php?format=json&url=${encodeURIComponent(longUrl)}&shorturl=${cleanPhone}`;
                 const response = await fetch(apiUrl);
-                
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                
+                if (!response.ok) throw new Error("Сервис is.gd недоступен.");
                 const data = await response.json();
-                
                 if (data.errorcode) return `https://is.gd/${cleanPhone}`;
-                
                 return data.shorturl;
             } catch (error) {
                 console.error('Ошибка создания is.gd ссылки:', error);
-                return `https://is.gd/${extractPhoneNumber(phone)}`;
+                return longUrl;
             }
         }
 
-        // ОСНОВНАЯ ФУНКЦИЯ: Создает плейлист на GitHub
+        // 1. Создание/Обновление плейлиста (.m3u) на GitHub
         async function createPlaylist(phone, key) {
             const cleanPhone = extractPhoneNumber(phone);
-            if (cleanPhone.length < 10) throw new Error("Номер должен содержать минимум 10 цифр (включая код страны/оператора)");
+            if (cleanPhone.length < 10) throw new Error("Номер должен содержать минимум 10 цифр.");
             const filename = `public/${cleanPhone}.m3u`;
             
-            // 1. Создание контента плейлиста
             const response = await fetch(REPO_CONFIG.samplePlaylist);
+            if (!response.ok) throw new Error("Не удалось загрузить образец плейлиста sample.m3u.");
+            
             let content = await response.text();
             content = content.replace(/\/iptv\/\w+\//g, `/iptv/${key}/`);
             
-            const sha = await getFileSha(filename);
+            // ** ИСПРАВЛЕНИЕ **: Получаем SHA именно для файла плейлиста!
+            const sha = await getFileSha(filename); 
             
-            // 2. Загрузка плейлиста на GitHub
             const apiUrl = `https://api.github.com/repos/${REPO_CONFIG.owner}/${REPO_CONFIG.repo}/contents/${filename}`;
             const uploadResponse = await fetch(apiUrl, {
                 method: 'PUT',
@@ -402,55 +500,37 @@
                     'Accept': 'application/vnd.github+json'
                 },
                 body: JSON.stringify({
-                    message: `Добавлен плейлист: ${cleanPhone}`,
+                    message: `Обновление плейлиста: ${cleanPhone}`,
                     content: btoa(unescape(encodeURIComponent(content))),
                     branch: REPO_CONFIG.branch,
-                    sha: sha
+                    sha: sha // Используем SHA конкретного плейлиста
                 })
             });
             
             if (!uploadResponse.ok) {
                 const error = await uploadResponse.json();
-                throw new Error(error.message || "Ошибка при загрузке на GitHub");
+                throw new Error(error.message || "Ошибка при загрузке плейлиста на GitHub");
             }
 
-            // 3. Создание короткой ссылки is.gd
             const isgdUrl = await createIsGdShortUrl(phone);
 
-            // 4. Возвращаем результат
             return {
                 isgdUrl: isgdUrl,
-                m3uFilename: filename.split('/').pop(),
+                m3uFilename: `${cleanPhone}.m3u`,
                 m3uContent: content
             };
         }
 
-        // ФУНКЦИЯ: Сохраняет данные нового клиента в clients.json
+        // 2. Сохранение данных клиента в clients.json
         async function saveClientData(client) {
-            // 1. Загружаем текущий список клиентов
-            const loadClients = async () => {
-                const apiUrl = `https://api.github.com/repos/${REPO_CONFIG.owner}/${REPO_CONFIG.repo}/contents/${REPO_CONFIG.clientsFile}`;
-                const response = await fetch(apiUrl, {
-                    headers: {
-                        'Authorization': `Bearer ${getGitHubToken()}`,
-                        'Accept': 'application/vnd.github+json'
-                    }
-                });
-                if (response.ok) {
-                    const data = await response.json();
-                    const content = decodeURIComponent(escape(atob(data.content)));
-                    return { clients: JSON.parse(content) || [], sha: data.sha };
-                }
-                // Если файл не существует (404)
-                return { clients: [], sha: null };
-            };
-
-            let { clients: currentClients, sha } = await loadClients();
+            let { clients: currentClients, sha } = await loadClientsFromGitHub();
             
-            // 2. Добавляем нового клиента (предполагаем, что он новый)
+            if (currentClients.some(c => c.phone === client.phone)) {
+                throw new Error("Клиент с таким номером уже зарегистрирован.");
+            }
+            
             currentClients.push(client);
 
-            // 3. Сохраняем обновленный список
             const apiUrl = `https://api.github.com/repos/${REPO_CONFIG.owner}/${REPO_CONFIG.repo}/contents/${REPO_CONFIG.clientsFile}`;
             const response = await fetch(apiUrl, {
                 method: 'PUT',
@@ -460,7 +540,7 @@
                     'Accept': 'application/vnd.github+json'
                 },
                 body: JSON.stringify({
-                    message: `Добавлен клиент из внешней формы: ${client.name}`,
+                    message: `Добавлен новый клиент: ${client.name}`,
                     content: btoa(unescape(encodeURIComponent(JSON.stringify(currentClients)))),
                     branch: REPO_CONFIG.branch,
                     sha: sha 
@@ -476,83 +556,119 @@
 
 
         // =================================================================
-        // ГЛАВНЫЙ ОБРАБОТЧИК ФОРМЫ
+        // ГЛАВНЫЕ ОБРАБОТЧИКИ
         // =================================================================
 
         document.addEventListener('DOMContentLoaded', () => {
-            const phoneInput = document.getElementById('clientPhone');
-            const nameInput = document.getElementById('clientName');
-            const getPlaylistBtn = document.getElementById('getPlaylistBtn');
+            // --- ОБРАБОТЧИК РЕГИСТРАЦИИ ---
+            document.getElementById('registrationForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const name = document.getElementById('clientName').value.trim();
+                const phone = document.getElementById('clientPhone').value.trim();
+                const password = document.getElementById('clientPassword').value;
+                const passwordRepeat = document.getElementById('clientPasswordRepeat').value;
+                const statusEl = document.getElementById('statusMessage');
 
-            // 1. Удалены все обработчики маски телефона
-            // 2. Обработчик кнопки "Получить плейлист"
-            getPlaylistBtn.addEventListener('click', async () => {
-                const name = nameInput.value.trim();
-                const phone = phoneInput.value.trim();
-                const cleanPhoneDigits = extractPhoneNumber(phone); // Получаем чистые цифры
-
-                // Валидация
-                if (!name || !phone) {
-                    showStatus("Заполните все поля", "error");
-                    return;
-                }
-                if (cleanPhoneDigits.length < 10) {
-                    showStatus("Номер должен содержать не менее 10 цифр (включая код)", "error");
-                    return;
-                }
-
-                // showStatus("Обработка и создание плейлиста...", "success"); <--- ЭТА СТРОКА УДАЛЕНА
-
-                // Дефолтные значения для нового клиента
+                const cleanPhoneDigits = extractPhoneNumber(phone);
                 const defaultKey = '0000000000'; 
                 const defaultMonths = '1';
                 const defaultPaymentDate = new Date().toISOString().split('T')[0];
+                
+                statusEl.style.display = 'none';
+
+                if (!name || !phone || !password || !passwordRepeat || password !== passwordRepeat || password.length < 6 || cleanPhoneDigits.length < 10) {
+                    showStatus("Проверьте поля: заполнены, пароли совпадают (мин. 6 симв.), телефон (мин. 10 цифр).", "error", 'statusMessage');
+                    return;
+                }
+
+                const newClient = {
+                    name: name,
+                    phone: cleanPhoneDigits,
+                    password: password, 
+                    key: defaultKey,
+                    paymentDate: defaultPaymentDate,
+                    months: defaultMonths,
+                    registration_date: new Date().toISOString()
+                };
 
                 try {
-                    // Шаг 1: Создание плейлиста (.m3u) на GitHub
-                    const result = await createPlaylist(phone, defaultKey);
+                    // 1. Создание плейлиста (.m3u)
+                    currentPlaylistResult = await createPlaylist(phone, defaultKey);
 
-                    // Шаг 2: Создание объекта клиента для сохранения
-                    const newClient = {
-                        name: name,
-                        phone: cleanPhoneDigits, // Сохраняем только чистые цифры
-                        key: defaultKey,
-                        paymentDate: defaultPaymentDate,
-                        months: defaultMonths
-                    };
-
-                    // Шаг 3: Сохранение клиента в clients.json на GitHub
+                    // 2. Сохранение клиента в clients.json
                     await saveClientData(newClient);
+                    
+                    currentClientData = newClient;
+                    
+                    // 3. Очистка формы и показ модального окна входа
+                    document.getElementById('registrationForm').reset();
+                    closeModal('registrationModal');
 
-                    // showStatus("Плейлист успешно создан и клиент добавлен!", "success"); <--- ЭТА СТРОКА УДАЛЕНА
+                    // Автоматически заполняем поля входа для удобства
+                    document.getElementById('loginPhone').value = phone; 
+                    document.getElementById('loginPassword').value = password; 
 
-                    // Шаг 4: Отображение модального окна со ссылкой
-                    document.getElementById('finalPlaylistLink').textContent = result.isgdUrl;
+                    openModal('loginModal');
 
-                    // Создание временной ссылки для скачивания
-                    const tempUrl = URL.createObjectURL(new Blob([result.m3uContent], { type: 'application/x-mpegurl' }));
-                    
-                    document.getElementById('copyLinkBtn').onclick = (e) => copyToClipboard(result.isgdUrl, e);
-                    document.getElementById('downloadLinkBtn').onclick = () => {
-                        forceDownload(tempUrl, result.m3uFilename);
-                        alert('Загрузка файла началась!');
-                    };
-                    
-                    openModal('linkDisplayModal');
-                    
-                    // Очистка формы
-                    nameInput.value = '';
-                    phoneInput.value = '';
-                    
                 } catch (error) {
-                    showStatus(`Ошибка: ${error.message}. Проверьте токен и доступ.`, "error");
-                    console.error('Основная ошибка:', error);
+                    showStatus(`❌ Произошла ошибка: ${error.message}`, "error", 'statusMessage');
+                    console.error('Ошибка при регистрации:', error);
+                }
+            });
+
+            // --- ОБРАБОТЧИК ВХОДА ---
+            document.getElementById('loginForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const loginPhone = document.getElementById('loginPhone').value.trim();
+                const loginPassword = document.getElementById('loginPassword').value;
+                const loginStatusEl = document.getElementById('loginStatusMessage');
+                loginStatusEl.style.display = 'none';
+
+                const cleanLoginPhoneDigits = extractPhoneNumber(loginPhone);
+                
+                if (!loginPhone || !loginPassword) {
+                    showStatus('Заполните все поля для входа.', "error", 'loginStatusMessage');
+                    return;
+                }
+
+                try {
+                    // 1. Загрузка данных клиентов
+                    const { clients } = await loadClientsFromGitHub();
+                    
+                    // 2. Поиск клиента по номеру и паролю
+                    const client = clients.find(c => c.phone === cleanLoginPhoneDigits && c.password === loginPassword);
+                    
+                    if (client) {
+                        currentClientData = client;
+                        
+                        // 3. Создаем/обновляем плейлист, чтобы получить актуальную ссылку/контент
+                        currentPlaylistResult = await createPlaylist(loginPhone, client.key || '0000000000'); 
+
+                        // 4. Показываем модальное окно со ссылкой
+                        document.getElementById('finalPlaylistLink').textContent = currentPlaylistResult.isgdUrl;
+                        
+                        const tempUrl = URL.createObjectURL(new Blob([currentPlaylistResult.m3uContent], { type: 'application/x-mpegurl' }));
+                        
+                        document.getElementById('copyLinkBtn').onclick = (e) => copyToClipboard(currentPlaylistResult.isgdUrl, e);
+                        document.getElementById('downloadLinkBtn').onclick = () => {
+                            forceDownload(tempUrl, currentPlaylistResult.m3uFilename);
+                        };
+
+                        closeModal('loginModal');
+                        openModal('linkDisplayModal');
+                        
+                    } else {
+                        showStatus('Неверный номер телефона или пароль.', "error", 'loginStatusMessage');
+                    }
+                } catch (error) {
+                    showStatus(`❌ Ошибка входа: ${error.message}`, "error", 'loginStatusMessage');
+                    console.error('Ошибка при входе:', error);
                 }
             });
         });
 
-        window.copyToClipboard = copyToClipboard;
-        window.forceDownload = forceDownload;
+        window.openModal = openModal;
+        window.closeModal = closeModal;
     </script>
 </body>
 </html>
