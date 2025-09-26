@@ -53,7 +53,6 @@
             background: var(--system-blue);
         }
 
-        /* Контейнер формы (для центрирования на странице) */
         .form-container {
             background: #ffffff;
             padding: 40px;
@@ -232,9 +231,13 @@
         
         .link-result-actions button {
             width: 100%;
-            font-size: 18px;
+            /* ИЗМЕНЕНИЯ СЮДА */
+            font-size: 20px; /* Увеличенный шрифт */
             padding: 15px;
             border-radius: 8px;
+            color: white; /* Белый цвет шрифта */
+            font-weight: 700; /* Жирный шрифт */
+            /* КОНЕЦ ИЗМЕНЕНИЙ */
         }
 
     </style>
@@ -320,8 +323,8 @@
             </div>
             
             <div class="link-result-actions">
-                <button id="copyLinkBtn" style="background: var(--system-blue);" class="secondary">Копировать ссылку</button>
-                <button id="downloadLinkBtn" style="background: var(--system-green); color: white;">Скачать файл</button>
+                <button id="copyLinkBtn" style="background: var(--system-blue);">Копировать ссылку</button>
+                <button id="downloadLinkBtn" style="background: var(--system-green);">Скачать файл</button>
             </div>
         </div>
     </div>
@@ -560,6 +563,8 @@
         // =================================================================
 
         document.addEventListener('DOMContentLoaded', () => {
+            const loginForm = document.getElementById('loginForm');
+            
             // --- ОБРАБОТЧИК РЕГИСТРАЦИИ ---
             document.getElementById('registrationForm').addEventListener('submit', async (e) => {
                 e.preventDefault();
@@ -616,8 +621,8 @@
                 }
             });
 
-            // --- ОБРАБОТЧИК ВХОДА ---
-            document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            // --- ОБРАБОТЧИК ВХОДА (РАБОТАЕТ ЧЕРЕЗ КНОПКУ И ENTER) ---
+            loginForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const loginPhone = document.getElementById('loginPhone').value.trim();
                 const loginPassword = document.getElementById('loginPassword').value;
