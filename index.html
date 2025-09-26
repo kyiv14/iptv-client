@@ -12,6 +12,8 @@
             --system-gray-light: #F2F2F7;
             --system-green: #34C759;
             --system-red: #FF3B30;
+            --blue-hover: #0056b3;
+            --green-hover: #218838;
         }
 
         /* Общие стили и фон */
@@ -229,15 +231,34 @@
             flex-direction: column;
         }
         
+        /* Стили для кнопок внутри модального окна плейлиста */
         .link-result-actions button {
             width: 100%;
-            /* ИЗМЕНЕНИЯ СЮДА */
-            font-size: 20px; /* Увеличенный шрифт */
+            font-size: 20px; 
             padding: 15px;
             border-radius: 8px;
-            color: white; /* Белый цвет шрифта */
-            font-weight: 700; /* Жирный шрифт */
-            /* КОНЕЦ ИЗМЕНЕНИЙ */
+            color: white; 
+            font-weight: 700;
+            border: none; /* Убираем обводку */
+            outline: none; /* Убираем обводку при фокусе */
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.1s ease; /* Добавляем анимацию */
+        }
+        
+        /* Анимация при наведении и нажатии */
+        #copyLinkBtn:hover {
+            background: var(--blue-hover) !important;
+            transform: translateY(-1px);
+        }
+        
+        #downloadLinkBtn:hover {
+            background: var(--green-hover) !important;
+            transform: translateY(-1px);
+        }
+
+        #copyLinkBtn:active, #downloadLinkBtn:active {
+            transform: translateY(0);
+            opacity: 0.9;
         }
 
     </style>
@@ -318,7 +339,7 @@
             </div>
             
             <div class="link-result-content" style="text-align: center;">
-                <h3 style="margin-top: 0;">Короткая ссылка:</h3>
+                <h3 style="margin-top: 0; visibility: hidden; height: 0; line-height: 0;">Короткая ссылка:</h3> 
                 <div class="link-result-link" id="finalPlaylistLink">Загрузка...</div>
             </div>
             
@@ -413,7 +434,6 @@
         // ЛОГИКА GITHUB/API
         // =================================================================
         
-        // ** ИСПРАВЛЕННАЯ ФУНКЦИЯ **: Получает SHA конкретного файла (для .m3u или .json)
         async function getFileSha(filename) {
             const apiUrl = `https://api.github.com/repos/${REPO_CONFIG.owner}/${REPO_CONFIG.repo}/contents/${filename}`;
             try {
@@ -427,7 +447,6 @@
                     const data = await response.json();
                     return data.sha;
                 }
-                // Если файл не существует (404), возвращаем null (для создания нового)
                 if (response.status === 404) {
                     return null;
                 }
@@ -491,7 +510,6 @@
             let content = await response.text();
             content = content.replace(/\/iptv\/\w+\//g, `/iptv/${key}/`);
             
-            // ** ИСПРАВЛЕНИЕ **: Получаем SHA именно для файла плейлиста!
             const sha = await getFileSha(filename); 
             
             const apiUrl = `https://api.github.com/repos/${REPO_CONFIG.owner}/${REPO_CONFIG.repo}/contents/${filename}`;
@@ -506,7 +524,7 @@
                     message: `Обновление плейлиста: ${cleanPhone}`,
                     content: btoa(unescape(encodeURIComponent(content))),
                     branch: REPO_CONFIG.branch,
-                    sha: sha // Используем SHA конкретного плейлиста
+                    sha: sha 
                 })
             });
             
