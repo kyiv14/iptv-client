@@ -14,6 +14,7 @@
             --system-red: #FF3B30;
             --blue-hover: #0056b3;
             --green-hover: #218838;
+            --qr-color: #333;
         }
 
         /* Общие стили и фон */
@@ -36,6 +37,12 @@
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* АНИМАЦИЯ ПОЯВЛЕНИЯ БЛОКОВ ПОСЛЕ АВТОРИЗАЦИИ */
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
         }
 
         /* КОНТЕЙНЕР ОСНОВНОГО КОНТЕНТА (НАСТОЛЬНЫЙ) */
@@ -223,35 +230,51 @@
         /* =================================================== */
         /* СТИЛИ БЛОКА ПЛЕЙЛИСТА (ПОСЛЕ АВТОРИЗАЦИИ) */
         /* =================================================== */
-        .playlist-info-page {
-            max-width: 600px;
+        .post-auth-layout {
+            display: none; /* ИЗМЕНЕНИЕ: Скрыт по умолчанию, показывается JS */
+            justify-content: center;
+            max-width: 1200px;
             width: 100%;
+            gap: 30px;
+            margin-top: 50px;
+            margin-bottom: 50px;
+            
+            /* НОВАЯ АНИМАЦИЯ для контейнера */
+            animation: fadeInScale 0.6s ease-out forwards;
+        }
+
+        .playlist-info-page,
+        .payment-block {
             background: #fff;
-            padding: 40px;
+            padding: 30px;
             border-radius: 12px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-            margin-top: 50px;
-            display: none; 
-            opacity: 0;
-            animation: fadeIn 0.6s ease-out forwards;
-            animation-delay: 0.1s;
+            flex: 1; 
+            min-width: 300px;
             text-align: center;
         }
         
-        /* НОВОЕ СТИЛЕВОЕ РЕШЕНИЕ ДЛЯ ПРИВЕТСТВИЯ */
-        .client-greeting {
-            color: var(--system-blue); /* Синий цвет */
-            font-size: 28px; /* Крупный шрифт */
-            font-weight: 700;
-            margin-bottom: 5px; /* Отступ до подзаголовка */
+        /* Убираем display:none из JS для внутренних блоков, но сохраняем для родителя */
+        .playlist-info-page {
+            display: block; 
+        }
+        .payment-block {
+            display: block; 
         }
         
-        /* НОВОЕ СТИЛЕВОЕ РЕШЕНИЕ ДЛЯ "ВАШ ПЛЕЙЛИСТ" */
+        /* Стили для заголовков и информации о клиенте */
+        .client-greeting {
+            color: var(--system-blue);
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
         .playlist-info-page h2 {
-            color: #333; /* Черный цвет */
-            font-size: 22px; /* Средний шрифт */
+            color: #333;
+            font-size: 22px;
             font-weight: 600;
-            margin-bottom: 25px; /* Отступ до сообщения о тарифе */
+            margin-bottom: 25px;
         }
 
         .expiration-info {
@@ -289,11 +312,57 @@
             cursor: pointer;
             transition: background 0.2s ease, transform 0.1s ease;
         }
+
+        /* СТИЛИ БЛОКА ОПЛАТЫ */
+        .payment-block h2 {
+            color: var(--system-green);
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .qr-code {
+            width: 180px;
+            height: 180px;
+            background-color: var(--qr-color);
+            margin: 0 auto 20px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+            color: white;
+            font-weight: 600;
+        }
+
+        .payment-amount {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .payment-btn {
+            background: var(--system-green) !important;
+            box-shadow: 0 4px 15px rgba(52, 199, 89, 0.4) !important;
+        }
         
+        .payment-btn:hover {
+            background: var(--green-hover) !important;
+            box-shadow: 0 8px 25px rgba(52, 199, 89, 0.6) !important;
+        }
+
         /* =================================================== */
-        /* АДАПТИВНОСТЬ И ОПТИМИЗАЦИЯ ШРИФТОВ ДЛЯ МОБИЛЬНЫХ */
+        /* АДАПТИВНОСТЬ */
         /* =================================================== */
         
+        @media (max-width: 900px) {
+            .post-auth-layout {
+                flex-direction: column; /* Вертикальный стек на планшетах/мобильных */
+                gap: 40px;
+            }
+        }
+
         @media (max-width: 768px) {
             .devices-container {
                 grid-template-columns: repeat(2, 1fr);
@@ -585,18 +654,37 @@
     </div>
 
 
-    <div id="playlistInfoPage" class="playlist-info-page">
-        <p class="client-greeting" id="clientNameGreeting"></p>
-        <h2 style="font-weight: 600;">Ваш плейлист</h2> 
+    <div class="post-auth-layout">
+        <div id="playlistInfoPage" class="playlist-info-page">
+            <p class="client-greeting" id="clientNameGreeting"></p>
+            <h2 style="font-weight: 600;">Ваш плейлист</h2> 
 
-        <p class="expiration-info" id="expirationMessage"></p>
-        <p style="color: #666; margin-bottom: 25px;">Используйте ссылку ниже для подключения к IPTV-сервису на вашем устройстве.</p>
-        
-        <div class="playlist-link-box" id="finalPlaylistLink">Загрузка...</div>
-        
-        <div class="playlist-info-actions">
-            <button id="copyLinkBtnPage" style="background: var(--system-blue);">Копировать ссылку</button>
-            <button id="downloadLinkBtnPage" style="background: var(--system-green);">Скачать файл</button>
+            <p class="expiration-info" id="expirationMessage"></p>
+            <p style="color: #666; margin-bottom: 25px;">Используйте ссылку ниже для подключения к IPTV-сервису на вашем устройстве.</p>
+            
+            <div class="playlist-link-box" id="finalPlaylistLink">Загрузка...</div>
+            
+            <div class="playlist-info-actions">
+                <button id="copyLinkBtnPage" style="background: var(--system-blue);">Копировать ссылку</button>
+                <button id="downloadLinkBtnPage" style="background: var(--system-green);">Скачать файл</button>
+            </div>
+        </div>
+
+        <div id="paymentBlock" class="payment-block playlist-info-page" style="display: none;">
+            <h2>Оплата подписки</h2>
+            <p class="payment-amount">Оплатить 150 грн</p>
+            
+            <div class="qr-code">
+                QR-КОД ЗДЕСЬ
+            </div>
+
+            <p style="color: #666; margin-bottom: 25px; font-size: 14px;">
+                Отсканируйте код или нажмите кнопку, чтобы перейти к оплате.
+            </p>
+
+            <button class="submit-btn-modern payment-btn" onclick="alert('Переход к платежной системе!')">
+                Оплатить
+            </button>
         </div>
     </div>
 
@@ -777,11 +865,12 @@
             document.getElementById('howToConnectBlock').style.display = 'none';
             document.getElementById('whereItWorksBlock').style.display = 'none';
 
-            // Показываем новую страницу плейлиста
-            const playlistPage = document.getElementById('playlistInfoPage');
-            playlistPage.style.display = 'block';
+            // Показываем контейнер с блоками плейлиста и оплаты
+            document.querySelector('.post-auth-layout').style.display = 'flex';
+            document.getElementById('playlistInfoPage').style.display = 'block';
+            document.getElementById('paymentBlock').style.display = 'block';
             
-            // --- ЛОГИКА: Вывод имени клиента (Теперь главный заголовок) ---
+            // --- ЛОГИКА: Вывод имени клиента (Главный заголовок) ---
             const clientName = currentClientData.name || 'Клиент';
             document.getElementById('clientNameGreeting').textContent = `Привет, ${clientName}!`;
             
