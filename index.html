@@ -69,7 +69,8 @@
             font-size: 18px;
             color: #555;
             line-height: 1.6;
-            margin-bottom: 30px;
+            /* Уменьшаем нижний отступ, так как сразу за ним идет кнопка */
+            margin-bottom: 20px; 
         }
         
         /* =================================================== */
@@ -499,15 +500,38 @@
                 max-width: 90%; 
             }
             
-            /* ИЗМЕНЕНИЕ: Убираем ограничение в модальном окне на узких экранах, чтобы не было слишком узко */
+            /* Убираем ограничение в модальном окне на узких экранах, чтобы не было слишком узко */
             #loginModal .input-group-modern {
                 max-width: none;
             }
         }
 
         /* =================================================== */
-        /* КНОПКИ В ПРАВОМ ВЕРХНЕМ УГЛУ */
+        /* КНОПКИ НАВИГАЦИИ */
         /* =================================================== */
+        
+        /* СТИЛЬ КНОПКИ СПИСКА КАНАЛОВ (внутри .main-content) */
+        .channel-list-btn {
+            display: inline-block; /* Для центрирования в блоке */
+            margin-top: 10px;
+            margin-bottom: 30px;
+            padding: 12px 24px;
+            background: var(--system-blue);
+            color: white;
+            font-weight: 700;
+            border-radius: 8px;
+            text-decoration: none;
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .channel-list-btn:hover {
+            background: var(--blue-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 123, 255, 0.5);
+        }
+
+        /* КОНТЕЙНЕР ДЛЯ ПРАВЫХ КНОПОК (СУЩЕСТВУЮЩИЙ) */
         .auth-buttons-container {
             position: fixed; 
             top: 20px;
@@ -517,6 +541,7 @@
             z-index: 110;
         }
         
+        /* Стили для всех навигационных кнопок в правом углу */
         .auth-btn {
             padding: 12px 18px;
             border: none;
@@ -527,11 +552,10 @@
             cursor: pointer;
             transition: background 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease, opacity 0.3s ease;
             box-shadow: 0 4px 10px rgba(0, 123, 255, 0.4);
-            /* Убедимся, что все кнопки по умолчанию видны для корректного рендеринга */
             display: block; 
             opacity: 1;
         }
-        
+
         .auth-btn:hover {
             background: var(--blue-hover);
             transform: translateY(-2px);
@@ -551,16 +575,12 @@
             background-color: var(--green-hover) !important;
             box-shadow: 0 6px 15px rgba(52, 199, 89, 0.5) !important;
         }
-        .auth-btn-payment:active {
-            box-shadow: 0 2px 5px rgba(52, 199, 89, 0.4) !important;
-        }
         
-        /* СТИЛИ КНОПКИ ВЫХОДА (Скрыта по умолчанию через CSS, чтобы избежать мерцания) */
+        /* СТИЛИ КНОПКИ ВЫХОДА (Красная) */
         #logoutBtn {
              background-color: var(--system-red) !important;
              box-shadow: 0 4px 10px rgba(255, 59, 48, 0.4) !important;
              transition: opacity 0.3s ease, background 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
-             /* ФИКС: Скрываем кнопку выхода сразу, чтобы она не смещала остальные */
              display: none; 
              opacity: 0;
         }
@@ -730,7 +750,7 @@
     </style>
 </head>
 <body>
-
+    
     <div class="auth-buttons-container" id="authButtonsContainer">
         <button class="auth-btn auth-btn-payment" id="paymentBtnNav" onclick="alert('Переход на страницу оплаты. Настройте ссылку!')">Оплата</button>
         <button class="auth-btn" id="regBtn" onclick="openModal('registrationModal')">Регистрация</button>
@@ -741,6 +761,8 @@
     <div class="main-content" id="preAuthContent">
         <h1>Доступное IPTV — 4000 каналов IPTV в отличном качестве с архивом.</h1>
         <p>Современный сервис IPTV телевидения, который дает возможность смотреть каналы в Full HD и Ultra HD качестве. Плейлист IPTV телевидения насчитывает 4000 IPTV каналов. Присоединяйтесь к нам и желаем Вам приятного просмотра</p>
+        
+        <a href="https://iptv-spisok.vercel.app/" target="_blank" class="channel-list-btn">Список каналов</a>
     </div>
 
     <div class="how-to-connect-block" id="howToConnectBlock">
@@ -1255,9 +1277,6 @@
         // =================================================================
 
         document.addEventListener('DOMContentLoaded', () => {
-            // ФИКС: Убираем вызов logout() при DOMContentLoaded,
-            // так как начальное состояние кнопок теперь задано в CSS.
-            // При успешном входе showPlaylistPage скроет кнопки входа и покажет кнопку выхода.
             
             const loginForm = document.getElementById('loginForm');
             
