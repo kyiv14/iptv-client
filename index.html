@@ -38,7 +38,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* КОНТЕЙНЕР ОСНОВНОГО КОНТЕНТА */
+        /* КОНТЕЙНЕР ОСНОВНОГО КОНТЕНТА (НАСТОЛЬНЫЙ) */
         .main-content {
             max-width: 700px;
             text-align: center;
@@ -220,7 +220,80 @@
             margin-top: 5px;
         }
         
-        /* Адаптивность для блока "Где работает" */
+        /* =================================================== */
+        /* СТИЛИ БЛОКА ПЛЕЙЛИСТА (ПОСЛЕ АВТОРИЗАЦИИ) */
+        /* =================================================== */
+        .playlist-info-page {
+            max-width: 600px;
+            width: 100%;
+            background: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            margin-top: 50px;
+            display: none; 
+            opacity: 0;
+            animation: fadeIn 0.6s ease-out forwards;
+            animation-delay: 0.1s;
+            text-align: center;
+        }
+        
+        /* НОВОЕ СТИЛЕВОЕ РЕШЕНИЕ ДЛЯ ПРИВЕТСТВИЯ */
+        .client-greeting {
+            color: var(--system-blue); /* Синий цвет */
+            font-size: 28px; /* Крупный шрифт */
+            font-weight: 700;
+            margin-bottom: 5px; /* Отступ до подзаголовка */
+        }
+        
+        /* НОВОЕ СТИЛЕВОЕ РЕШЕНИЕ ДЛЯ "ВАШ ПЛЕЙЛИСТ" */
+        .playlist-info-page h2 {
+            color: #333; /* Черный цвет */
+            font-size: 22px; /* Средний шрифт */
+            font-weight: 600;
+            margin-bottom: 25px; /* Отступ до сообщения о тарифе */
+        }
+
+        .expiration-info {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--system-red);
+            margin-bottom: 25px;
+        }
+
+        .playlist-link-box {
+            background: var(--system-gray-light);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            word-break: break-all;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .playlist-info-actions {
+            display: flex;
+            gap: 12px;
+            flex-direction: column;
+        }
+
+        .playlist-info-actions button {
+            width: 100%;
+            font-size: 20px; 
+            padding: 15px;
+            border-radius: 8px;
+            color: white; 
+            font-weight: 700;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.1s ease;
+        }
+        
+        /* =================================================== */
+        /* АДАПТИВНОСТЬ И ОПТИМИЗАЦИЯ ШРИФТОВ ДЛЯ МОБИЛЬНЫХ */
+        /* =================================================== */
+        
         @media (max-width: 768px) {
             .devices-container {
                 grid-template-columns: repeat(2, 1fr);
@@ -262,6 +335,12 @@
                 top: 10px;
                 right: 10px;
             }
+            .client-greeting {
+                font-size: 24px;
+            }
+            .playlist-info-page h2 {
+                font-size: 18px;
+            }
         }
 
         /* =================================================== */
@@ -277,15 +356,15 @@
         }
         
         .auth-btn {
-            padding: 12px 18px; /* Увеличен паддинг */
+            padding: 12px 18px;
             border: none;
             border-radius: 8px;
-            background: var(--system-blue); /* Чистый синий фон */
+            background: var(--system-blue);
             color: white;
-            font-weight: 700; /* Жирный шрифт */
+            font-weight: 700;
             cursor: pointer;
             transition: background 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
-            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.4); /* Красивая тень */
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.4);
         }
         
         .auth-btn:hover {
@@ -299,7 +378,6 @@
             box-shadow: 0 2px 5px rgba(0, 123, 255, 0.4);
         }
 
-        /* Отдельный стиль для кнопки Оплаты (зеленый) */
         .auth-btn-payment {
             background-color: var(--system-green) !important;
             box-shadow: 0 4px 10px rgba(52, 199, 89, 0.4) !important;
@@ -310,102 +388,6 @@
         }
         .auth-btn-payment:active {
             box-shadow: 0 2px 5px rgba(52, 199, 89, 0.4) !important;
-        }
-
-        /* ... Стили форм и модальных окон (оставлены без изменений) ... */
-
-        h1 {
-            color: #444;
-            margin-bottom: 35px;
-            font-weight: 600;
-            text-align: center;
-            font-size: 24px;
-        }
-
-        .input-group-modern {
-            position: relative;
-            margin-bottom: 35px;
-        }
-
-        .input-group-modern input {
-            width: 100%;
-            padding: 15px 10px 5px 10px;
-            background: none;
-            border: none;
-            border-bottom: 2px solid #ccc;
-            font-size: 16px;
-            color: #333;
-            outline: none;
-            transition: border-bottom-color 0.3s ease;
-        }
-
-        .input-group-modern input:focus,
-        .input-group-modern input:not(:placeholder-shown) {
-            border-bottom-color: var(--system-blue);
-        }
-
-        .input-group-modern label {
-            position: absolute;
-            top: 15px;
-            left: 10px;
-            color: #999;
-            font-size: 16px;
-            pointer-events: none;
-            transition: all 0.3s ease;
-        }
-
-        .input-group-modern input:focus + label,
-        .input-group-modern input:not(:placeholder-shown) + label {
-            top: -10px;
-            left: 0;
-            font-size: 12px;
-            color: var(--system-blue);
-        }
-
-        .submit-btn-modern {
-            width: 100%;
-            padding: 15px;
-            border: none;
-            border-radius: 8px;
-            background: var(--system-blue); 
-            color: white;
-            font-size: 18px;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
-            transition: all 0.3s ease;
-            overflow: hidden;
-            position: relative;
-            z-index: 1;
-        }
-
-        .submit-btn-modern:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 123, 255, 0.6);
-        }
-
-        .submit-btn-modern:active {
-            transform: translateY(0);
-            box-shadow: 0 2px 10px rgba(0, 123, 255, 0.4);
-        }
-        
-        .status-message {
-            margin-top: 15px;
-            padding: 10px;
-            border-radius: 6px;
-            text-align: center;
-            font-size: 15px;
-            display: none;
-        }
-        
-        .status-message.success {
-            background-color: #e6ffe6;
-            color: var(--system-green);
-        }
-        
-        .status-message.error {
-            background-color: #ffe6e6;
-            color: var(--system-red);
         }
         
         /* Стили для модальных окон */
@@ -438,75 +420,82 @@
             from { transform: scale(0.9); opacity: 0; }
             to { transform: scale(1); opacity: 1; }
         }
-        
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
 
-        .modal-header h2 {
-            font-size: 20px;
-            color: var(--system-blue);
-            margin: 0;
+        /* INPUTS AND STATUS MESSAGES */
+        .input-group-modern {
+            position: relative;
+            margin-bottom: 35px;
         }
-
-        .close-btn {
-            font-size: 28px;
-            cursor: pointer;
-            line-height: 1;
+        .input-group-modern input {
+            width: 100%;
+            padding: 15px 10px 5px 10px;
+            background: none;
+            border: none;
+            border-bottom: 2px solid #ccc;
+            font-size: 16px;
+            color: #333;
+            outline: none;
+            transition: border-bottom-color 0.3s ease;
+        }
+        .input-group-modern input:focus,
+        .input-group-modern input:not(:placeholder-shown) {
+            border-bottom-color: var(--system-blue);
+        }
+        .input-group-modern label {
             position: absolute;
             top: 15px;
-            right: 20px;
-            color: #666;
-        }
-
-        /* Дополнительные стили для модального окна результата плейлиста */
-        .link-result-link {
-            background: var(--system-gray-light);
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            word-break: break-all;
-            text-align: center;
+            left: 10px;
+            color: #999;
             font-size: 16px;
-            font-weight: 500;
+            pointer-events: none;
+            transition: all 0.3s ease;
         }
-        
-        .link-result-actions {
-            display: flex;
-            gap: 12px;
-            flex-direction: column;
+        .input-group-modern input:focus + label,
+        .input-group-modern input:not(:placeholder-shown) + label {
+            top: -10px;
+            left: 0;
+            font-size: 12px;
+            color: var(--system-blue);
         }
-        
-        .link-result-actions button {
+        .submit-btn-modern {
             width: 100%;
-            font-size: 20px; 
             padding: 15px;
-            border-radius: 8px;
-            color: white; 
-            font-weight: 700;
             border: none;
-            outline: none;
+            border-radius: 8px;
+            background: var(--system-blue); 
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
             cursor: pointer;
-            transition: background 0.2s ease, transform 0.1s ease;
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
+            transition: all 0.3s ease;
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
         }
-        
-        /* Анимация при наведении и нажатии */
-        #copyLinkBtn:hover {
-            background: var(--blue-hover) !important;
-            transform: translateY(-1px);
+        .submit-btn-modern:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 123, 255, 0.6);
         }
-        
-        #downloadLinkBtn:hover {
-            background: var(--green-hover) !important;
-            transform: translateY(-1px);
-        }
-
-        #copyLinkBtn:active, #downloadLinkBtn:active {
+        .submit-btn-modern:active {
             transform: translateY(0);
-            opacity: 0.9;
+            box-shadow: 0 2px 10px rgba(0, 123, 255, 0.4);
+        }
+        .status-message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 15px;
+            display: none;
+        }
+        .status-message.success {
+            background-color: #e6ffe6;
+            color: var(--system-green);
+        }
+        .status-message.error {
+            background-color: #ffe6e6;
+            color: var(--system-red);
         }
 
     </style>
@@ -519,12 +508,12 @@
         <button class="auth-btn" onclick="openModal('loginModal')">Вход</button>
     </div>
 
-    <div class="main-content">
+    <div class="main-content" id="preAuthContent">
         <h1>Доступное IPTV — 4000 каналов IPTV в отличном качестве с архивом.</h1>
         <p>Современный сервис IPTV телевидения, который дает возможность смотреть каналы в Full HD и Ultra HD качестве. Плейлист IPTV телевидения насчитывает 4000 IPTV каналов. Присоединяйтесь к нам и желаем Вам приятного просмотра</p>
     </div>
 
-    <div class="how-to-connect-block">
+    <div class="how-to-connect-block" id="howToConnectBlock">
         <h2>Как подключить IPTV</h2>
         <div class="steps-container">
             <div class="step-item">
@@ -552,7 +541,7 @@
         </div>
     </div>
     
-    <div class="where-it-works-block">
+    <div class="where-it-works-block" id="whereItWorksBlock">
         <h2>Где работает IPTV?</h2>
         <div class="devices-container">
             <div class="device-item">
@@ -592,6 +581,22 @@
                 </div>
                 <div class="device-name">На компьютере и ноутбуке</div>
             </div>
+        </div>
+    </div>
+
+
+    <div id="playlistInfoPage" class="playlist-info-page">
+        <p class="client-greeting" id="clientNameGreeting"></p>
+        <h2 style="font-weight: 600;">Ваш плейлист</h2> 
+
+        <p class="expiration-info" id="expirationMessage"></p>
+        <p style="color: #666; margin-bottom: 25px;">Используйте ссылку ниже для подключения к IPTV-сервису на вашем устройстве.</p>
+        
+        <div class="playlist-link-box" id="finalPlaylistLink">Загрузка...</div>
+        
+        <div class="playlist-info-actions">
+            <button id="copyLinkBtnPage" style="background: var(--system-blue);">Копировать ссылку</button>
+            <button id="downloadLinkBtnPage" style="background: var(--system-green);">Скачать файл</button>
         </div>
     </div>
 
@@ -651,26 +656,6 @@
     </div>
 
 
-    <div id="linkDisplayModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModal('linkDisplayModal')">×</span>
-            <div class="modal-header">
-                <h2>Ваш плейлист</h2>
-            </div>
-            
-            <div class="link-result-content" style="text-align: center;">
-                <h3 style="margin-top: 0; visibility: hidden; height: 0; line-height: 0;">Короткая ссылка:</h3> 
-                <div class="link-result-link" id="finalPlaylistLink">Загрузка...</div>
-            </div>
-            
-            <div class="link-result-actions">
-                <button id="copyLinkBtn" style="background: var(--system-blue);">Копировать ссылку</button>
-                <button id="downloadLinkBtn" style="background: var(--system-green);">Скачать файл</button>
-            </div>
-        </div>
-    </div>
-
-
     <script>
         // =================================================================
         // КОНФИГУРАЦИЯ GITHUB И VERCEL
@@ -698,6 +683,42 @@
         // =================================================================
         // ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
         // =================================================================
+        
+        // НОВАЯ ФУНКЦИЯ ДЛЯ РАСЧЕТА ДНЕЙ ДО ОКОНЧАНИЯ ТАРИФА
+        function getExpirationDays(paymentDate, months) {
+            if (!paymentDate || !months) {
+                return "данные отсутствуют";
+            }
+            
+            const start = new Date(paymentDate);
+            const durationMonths = parseInt(months, 10);
+            
+            if (isNaN(durationMonths) || durationMonths <= 0) {
+                return "данные отсутствуют";
+            }
+
+            // Вычисляем дату окончания: добавляем месяцы к дате оплаты
+            const expirationDate = new Date(start);
+            expirationDate.setMonth(expirationDate.getMonth() + durationMonths);
+            
+            const today = new Date();
+            // Обнуляем часы для корректного сравнения дат
+            today.setHours(0, 0, 0, 0);
+            expirationDate.setHours(0, 0, 0, 0);
+
+            // Разница в миллисекундах
+            const diffTime = expirationDate.getTime() - today.getTime();
+            // Разница в днях
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            
+            if (diffDays > 0) {
+                return `заканчивается через ${diffDays} дн.`;
+            } else if (diffDays === 0) {
+                return "заканчивается сегодня!";
+            } else {
+                return `закончился ${Math.abs(diffDays)} дн. назад`;
+            }
+        }
 
         function extractPhoneNumber(phone) {
             const digits = phone.replace(/\D/g, '');
@@ -747,6 +768,37 @@
                     }, 100);
                 })
                 .catch(error => console.error('Ошибка при скачивании файла:', error));
+        }
+
+        // ФУНКЦИЯ, КОТОРАЯ ПОКАЗЫВАЕТ СТРАНИЦУ ПЛЕЙЛИСТА
+        function showPlaylistPage() {
+            // Скрываем все информационные блоки, которые показывались до авторизации
+            document.getElementById('preAuthContent').style.display = 'none';
+            document.getElementById('howToConnectBlock').style.display = 'none';
+            document.getElementById('whereItWorksBlock').style.display = 'none';
+
+            // Показываем новую страницу плейлиста
+            const playlistPage = document.getElementById('playlistInfoPage');
+            playlistPage.style.display = 'block';
+            
+            // --- ЛОГИКА: Вывод имени клиента (Теперь главный заголовок) ---
+            const clientName = currentClientData.name || 'Клиент';
+            document.getElementById('clientNameGreeting').textContent = `Привет, ${clientName}!`;
+            
+            const expirationMsg = getExpirationDays(currentClientData.paymentDate, currentClientData.months);
+            document.getElementById('expirationMessage').textContent = `Ваш тариф ${expirationMsg}.`;
+            
+            // Заполняем остальные данные на новой странице
+            document.getElementById('finalPlaylistLink').textContent = currentPlaylistResult.isgdUrl;
+            
+            const tempUrl = URL.createObjectURL(new Blob([currentPlaylistResult.m3uContent], { type: 'application/x-mpegurl' }));
+            const m3uFilename = currentPlaylistResult.m3uFilename;
+
+            // Назначаем обработчики для кнопок на новой странице
+            document.getElementById('copyLinkBtnPage').onclick = (e) => copyToClipboard(currentPlaylistResult.isgdUrl, e);
+            document.getElementById('downloadLinkBtnPage').onclick = () => {
+                forceDownload(tempUrl, m3uFilename);
+            };
         }
 
 
@@ -913,6 +965,7 @@
                 const statusEl = document.getElementById('statusMessage');
 
                 const cleanPhoneDigits = extractPhoneNumber(phone);
+                // Параметры по умолчанию при регистрации: 1 месяц оплачен с сегодняшнего дня
                 const defaultKey = '0000000000'; 
                 const defaultMonths = '1';
                 const defaultPaymentDate = new Date().toISOString().split('T')[0];
@@ -987,18 +1040,10 @@
                         // 3. Создаем/обновляем плейлист, чтобы получить актуальную ссылку/контент
                         currentPlaylistResult = await createPlaylist(loginPhone, client.key || '0000000000'); 
 
-                        // 4. Показываем модальное окно со ссылкой
-                        document.getElementById('finalPlaylistLink').textContent = currentPlaylistResult.isgdUrl;
-                        
-                        const tempUrl = URL.createObjectURL(new Blob([currentPlaylistResult.m3uContent], { type: 'application/x-mpegurl' }));
-                        
-                        document.getElementById('copyLinkBtn').onclick = (e) => copyToClipboard(currentPlaylistResult.isgdUrl, e);
-                        document.getElementById('downloadLinkBtn').onclick = () => {
-                            forceDownload(tempUrl, currentPlaylistResult.m3uFilename);
-                        };
-
                         closeModal('loginModal');
-                        openModal('linkDisplayModal');
+                        
+                        // 4. Показываем ПОЛНОЦЕННУЮ СТРАНИЦУ с плейлистом
+                        showPlaylistPage();
                         
                     } else {
                         showStatus('Неверный номер телефона или пароль.', "error", 'loginStatusMessage');
