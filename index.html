@@ -38,7 +38,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* КОНТЕЙНЕР ОСНОВНОГО КОНТЕНТА */
+        /* КОНТЕЙНЕР ОСНОВНОГО КОНТЕНТА (НАСТОЛЬНЫЙ) */
         .main-content {
             max-width: 700px;
             text-align: center;
@@ -177,7 +177,6 @@
         }
 
         .devices-container {
-            /* ИЗМЕНЕНИЕ: Устанавливаем ширину элементов для 3 в ряд */
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 30px 20px;
@@ -196,21 +195,21 @@
         }
 
         .device-icon {
-            display: flex; /* Используем flexbox для центрирования img */
+            display: flex;
             justify-content: center;
             align-items: center;
             width: 80px;
             height: 80px;
             border-radius: 50%;
             background: var(--system-blue); 
-            margin: 0 auto 10px; /* Центрируем иконку */
+            margin: 0 auto 10px;
             box-shadow: 0 4px 10px rgba(0, 123, 255, 0.4);
         }
         
         .device-icon img {
-            width: 70%; /* Размер иконок внутри круга */
+            width: 70%;
             height: 70%;
-            object-fit: contain; /* Сохраняем пропорции */
+            object-fit: contain;
         }
 
         .device-name {
@@ -218,10 +217,23 @@
             font-weight: 600;
             color: #333;
             text-transform: uppercase;
-            margin-top: 5px; /* Отступ от иконки */
+            margin-top: 5px;
         }
         
-        /* Адаптивность для блока "Где работает" */
+        /* =================================================== */
+        /* АДАПТИВНОСТЬ И ОПТИМИЗАЦИЯ ШРИФТОВ ДЛЯ МОБИЛЬНЫХ */
+        /* =================================================== */
+        
+        @media (max-width: 850px) {
+            .steps-container {
+                justify-content: center;
+            }
+            .step-item {
+                flex-basis: 45%;
+                margin-bottom: 20px;
+            }
+        }
+        
         @media (max-width: 768px) {
             .devices-container {
                 grid-template-columns: repeat(2, 1fr); /* 2 в ряд на планшетах */
@@ -229,15 +241,54 @@
         }
 
         @media (max-width: 500px) {
-            .devices-container {
-                grid-template-columns: 1fr; /* 1 в ряд на мобильных */
-            }
+            /* ИЗМЕНЕНИЯ ШРИФТОВ */
             .main-content {
                 margin-top: 80px;
             }
+
+            .main-content h1 {
+                font-size: 32px; /* Максимально большой заголовок */
+                line-height: 1.2;
+            }
+            
+            .main-content p {
+                font-size: 18px; /* Максимально большой основной текст */
+            }
+            
+            .how-to-connect-block h2,
+            .where-it-works-block h2 {
+                font-size: 24px; /* Заголовки блоков */
+            }
+
+            .step-title,
+            .device-name {
+                font-size: 16px; /* Заголовки шагов/устройств */
+            }
+
+            .step-description {
+                font-size: 15px; /* Описание шагов */
+            }
+            
+            /* ИЗМЕНЕНИЯ РАЗМЕТКИ */
+            .steps-container {
+                gap: 30px;
+            }
+
+            .devices-container {
+                grid-template-columns: 1fr; /* 1 в ряд на мобильных */
+            }
+            
+            .step-item {
+                flex-basis: 90%;
+            }
+            
+            .auth-buttons-container {
+                top: 10px;
+                right: 10px;
+            }
         }
         /* =================================================== */
-        /* КОНЕЦ СТИЛЕЙ БЛОКА */
+        /* КОНЕЦ АДАПТИВНОСТИ */
         /* =================================================== */
 
         /* КНОПКИ В ПРАВОМ ВЕРХНЕМ УГЛУ */
@@ -962,7 +1013,7 @@
                         showStatus('Неверный номер телефона или пароль.', "error", 'loginStatusMessage');
                     }
                 } catch (error) {
-                    showStatus(`❌ Ошибка входа: ${error.message}`, "error", 'loginStatusMessage');
+                    showStatus(`❌ Произошла ошибка: ${error.message}`, "error", 'loginStatusMessage');
                     console.error('Ошибка при входе:', error);
                 }
             });
