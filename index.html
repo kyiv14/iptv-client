@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Вход и Регистрация</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
+    <title>Доступное IPTV | Вход и Регистрация</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700;900&display=swap" rel="stylesheet">
     
     <style>
         :root {
@@ -19,7 +19,7 @@
         /* Общие стили и фон */
         body {
             font-family: 'Montserrat', sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: #FFFFFF;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -28,11 +28,221 @@
             padding: 20px;
             box-sizing: border-box;
             color: #333;
+            flex-direction: column;
+            position: relative;
         }
         
+        /* АНИМАЦИЯ ПОЯВЛЕНИЯ ЭЛЕМЕНТОВ */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* КОНТЕЙНЕР ОСНОВНОГО КОНТЕНТА */
+        .main-content {
+            max-width: 700px;
+            text-align: center;
+            padding: 20px;
+            margin-top: 50px; 
+            margin-bottom: 50px; 
+            opacity: 0;
+            animation: fadeIn 0.8s ease-out forwards;
+            animation-delay: 0.2s;
+        }
+
+        .main-content h1 {
+            font-size: 38px;
+            color: var(--system-blue);
+            margin-bottom: 20px;
+            font-weight: 700;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .main-content p {
+            font-size: 18px;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        
+        /* =================================================== */
+        /* СТИЛИ БЛОКА "КАК ПОДКЛЮЧИТЬ IPTV" */
+        /* =================================================== */
+        .how-to-connect-block {
+            max-width: 1000px;
+            width: 100%;
+            padding: 30px 20px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            animation: fadeIn 0.8s ease-out forwards;
+            animation-delay: 0.5s;
+            margin-bottom: 40px; 
+        }
+
+        .how-to-connect-block h2 {
+            font-size: 28px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 40px;
+            color: #333;
+        }
+
+        .steps-container {
+            display: flex;
+            justify-content: space-around;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .step-item {
+            flex-basis: 200px; 
+            text-align: center;
+            padding: 10px;
+            transition: transform 0.3s ease;
+        }
+        
+        .step-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            background: var(--system-blue); 
+            color: white;
+            border-radius: 50%;
+            font-size: 20px;
+            font-weight: 900;
+            margin: 0 auto 15px;
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.4);
+            transition: transform 0.3s ease;
+        }
+        
+        .step-item:hover .step-number {
+            transform: scale(1.1);
+        }
+
+        .step-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--system-blue);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .step-description {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+            line-height: 1.4;
+        }
+
+        .step-description a {
+             color: var(--system-blue);
+             text-decoration: none;
+             font-weight: 600;
+             transition: color 0.2s ease;
+        }
+        
+        .step-description a:hover {
+             color: var(--blue-hover);
+             text-decoration: underline;
+        }
+
+        /* =================================================== */
+        /* СТИЛИ БЛОКА "ГДЕ РАБОТАЕТ IPTV?" */
+        /* =================================================== */
+        .where-it-works-block {
+            max-width: 1000px;
+            width: 100%;
+            padding: 30px 20px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            animation: fadeIn 0.8s ease-out forwards;
+            animation-delay: 0.8s;
+            margin-bottom: 40px;
+        }
+
+        .where-it-works-block h2 {
+            font-size: 28px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 40px;
+            color: #333;
+        }
+
+        .devices-container {
+            /* ИЗМЕНЕНИЕ: Устанавливаем ширину элементов для 3 в ряд */
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px 20px;
+            justify-items: center;
+            padding: 0 5%;
+        }
+
+        .device-item {
+            text-align: center;
+            padding: 10px;
+            transition: transform 0.3s ease;
+        }
+        
+        .device-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .device-icon {
+            display: flex; /* Используем flexbox для центрирования img */
+            justify-content: center;
+            align-items: center;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--system-blue); 
+            margin: 0 auto 10px; /* Центрируем иконку */
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.4);
+        }
+        
+        .device-icon img {
+            width: 70%; /* Размер иконок внутри круга */
+            height: 70%;
+            object-fit: contain; /* Сохраняем пропорции */
+        }
+
+        .device-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            text-transform: uppercase;
+            margin-top: 5px; /* Отступ от иконки */
+        }
+        
+        /* Адаптивность для блока "Где работает" */
+        @media (max-width: 768px) {
+            .devices-container {
+                grid-template-columns: repeat(2, 1fr); /* 2 в ряд на планшетах */
+            }
+        }
+
+        @media (max-width: 500px) {
+            .devices-container {
+                grid-template-columns: 1fr; /* 1 в ряд на мобильных */
+            }
+            .main-content {
+                margin-top: 80px;
+            }
+        }
+        /* =================================================== */
+        /* КОНЕЦ СТИЛЕЙ БЛОКА */
+        /* =================================================== */
+
         /* КНОПКИ В ПРАВОМ ВЕРХНЕМ УГЛУ */
         .auth-buttons-container {
-            position: absolute;
+            position: fixed; 
             top: 20px;
             right: 20px;
             display: flex;
@@ -44,26 +254,24 @@
             padding: 10px 15px;
             border: none;
             border-radius: 8px;
-            background: rgba(0, 123, 255, 0.8);
+            background: rgba(0, 123, 255, 0.9);
             color: white;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
-            transition: background 0.2s ease;
+            transition: background 0.2s ease, transform 0.1s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
         
         .auth-btn:hover {
             background: var(--system-blue);
+            transform: translateY(-1px);
+        }
+        
+        .auth-btn:active {
+            transform: translateY(0);
         }
 
-        .form-container {
-            background: #ffffff;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-            max-width: 450px;
-            width: 100%;
-            display: none;
-        }
+        /* ... Стили форм и модальных окон (оставлены без изменений) ... */
 
         h1 {
             color: #444;
@@ -231,7 +439,6 @@
             flex-direction: column;
         }
         
-        /* Стили для кнопок внутри модального окна плейлиста */
         .link-result-actions button {
             width: 100%;
             font-size: 20px; 
@@ -239,10 +446,10 @@
             border-radius: 8px;
             color: white; 
             font-weight: 700;
-            border: none; /* Убираем обводку */
-            outline: none; /* Убираем обводку при фокусе */
+            border: none;
+            outline: none;
             cursor: pointer;
-            transition: background 0.2s ease, transform 0.1s ease; /* Добавляем анимацию */
+            transition: background 0.2s ease, transform 0.1s ease;
         }
         
         /* Анимация при наведении и нажатии */
@@ -270,9 +477,80 @@
         <button class="auth-btn" onclick="openModal('loginModal')">Вход</button>
     </div>
 
-    <div style="text-align: center; opacity: 0.5;">
-        <h1 style="color: #666;">Добро пожаловать</h1>
-        <p>Для доступа к плейлистам войдите или зарегистрируйтесь.</p>
+    <div class="main-content">
+        <h1>Доступное IPTV — 4000 каналов IPTV в отличном качестве с архивом.</h1>
+        <p>Современный сервис IPTV телевидения, который дает возможность смотреть каналы в Full HD и Ultra HD качестве. Плейлист IPTV телевидения насчитывает 4000 IPTV каналов. Присоединяйтесь к нам и желаем Вам приятного просмотра</p>
+    </div>
+
+    <div class="how-to-connect-block">
+        <h2>Как подключить IPTV</h2>
+        <div class="steps-container">
+            <div class="step-item">
+                <div class="step-number">1</div>
+                <div class="step-title">Регистрация</div>
+                <div class="step-description">
+                    Нажмите кнопку Регистрация в правом верхнем углу
+                </div>
+            </div>
+            <div class="step-item">
+                <div class="step-number">2</div>
+                <div class="step-title">Оплата</div>
+                <div class="step-description">Оплатить подписку</div>
+            </div>
+            <div class="step-item">
+                <div class="step-number">3</div>
+                <div class="step-title">Плейлист</div>
+                <div class="step-description">Скачать плейлист</div>
+            </div>
+            <div class="step-item">
+                <div class="step-number">4</div>
+                <div class="step-title">Загрузка</div>
+                <div class="step-description">Загрузить плейлист в Ваше устройство</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="where-it-works-block">
+        <h2>Где работает IPTV?</h2>
+        <div class="devices-container">
+            <div class="device-item">
+                <div class="device-icon">
+                    <img src="https://iptvclient.vercel.app/smartphone-call.png" alt="Смартфон">
+                </div>
+                <div class="device-name">На смартфоне</div>
+            </div>
+            <div class="device-item">
+                <div class="device-icon">
+                    <img src="https://iptvclient.vercel.app/computer-tablet.png" alt="Планшет">
+                </div>
+                <div class="device-name">На планшете</div>
+            </div>
+            <div class="device-item">
+                <div class="device-icon">
+                    <img src="https://iptvclient.vercel.app/tv-box.png" alt="ТВ приставка">
+                </div>
+                <div class="device-name">На ТВ приставке</div>
+            </div>
+            
+            <div class="device-item">
+                <div class="device-icon">
+                    <img src="https://iptvclient.vercel.app/tv.png" alt="Smart TV">
+                </div>
+                <div class="device-name">На Smart TV телевизоре</div>
+            </div>
+            <div class="device-item">
+                <div class="device-icon">
+                    <img src="https://iptvclient.vercel.app/tv-tuner.png" alt="Спутниковый тюнер">
+                </div>
+                <div class="device-name">На спутниковом тюнере</div>
+            </div>
+            <div class="device-item">
+                <div class="device-icon">
+                    <img src="https://iptvclient.vercel.app/laptop.png" alt="Компьютер">
+                </div>
+                <div class="device-name">На компьютере и ноутбуке</div>
+            </div>
+        </div>
     </div>
 
 
