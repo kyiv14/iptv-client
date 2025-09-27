@@ -38,7 +38,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* КОНТЕЙНЕР ОСНОВНОГО КОНТЕНТА (НАСТОЛЬНЫЙ) */
+        /* КОНТЕЙНЕР ОСНОВНОГО КОНТЕНТА */
         .main-content {
             max-width: 700px;
             text-align: center;
@@ -220,78 +220,53 @@
             margin-top: 5px;
         }
         
-        /* =================================================== */
-        /* АДАПТИВНОСТЬ И ОПТИМИЗАЦИЯ ШРИФТОВ ДЛЯ МОБИЛЬНЫХ */
-        /* =================================================== */
-        
-        @media (max-width: 850px) {
-            .steps-container {
-                justify-content: center;
-            }
-            .step-item {
-                flex-basis: 45%;
-                margin-bottom: 20px;
-            }
-        }
-        
+        /* Адаптивность для блока "Где работает" */
         @media (max-width: 768px) {
             .devices-container {
-                grid-template-columns: repeat(2, 1fr); /* 2 в ряд на планшетах */
+                grid-template-columns: repeat(2, 1fr);
             }
         }
 
         @media (max-width: 500px) {
-            /* ИЗМЕНЕНИЯ ШРИФТОВ */
+            .devices-container {
+                grid-template-columns: 1fr;
+            }
             .main-content {
                 margin-top: 80px;
             }
-
             .main-content h1 {
-                font-size: 32px; /* Максимально большой заголовок */
+                font-size: 32px;
                 line-height: 1.2;
             }
-            
             .main-content p {
-                font-size: 18px; /* Максимально большой основной текст */
+                font-size: 18px;
             }
-            
             .how-to-connect-block h2,
             .where-it-works-block h2 {
-                font-size: 24px; /* Заголовки блоков */
+                font-size: 24px;
             }
-
             .step-title,
             .device-name {
-                font-size: 16px; /* Заголовки шагов/устройств */
+                font-size: 16px;
             }
-
             .step-description {
-                font-size: 15px; /* Описание шагов */
+                font-size: 15px;
             }
-            
-            /* ИЗМЕНЕНИЯ РАЗМЕТКИ */
             .steps-container {
                 gap: 30px;
             }
-
-            .devices-container {
-                grid-template-columns: 1fr; /* 1 в ряд на мобильных */
-            }
-            
             .step-item {
                 flex-basis: 90%;
             }
-            
             .auth-buttons-container {
                 top: 10px;
                 right: 10px;
             }
         }
-        /* =================================================== */
-        /* КОНЕЦ АДАПТИВНОСТИ */
-        /* =================================================== */
 
+        /* =================================================== */
         /* КНОПКИ В ПРАВОМ ВЕРХНЕМ УГЛУ */
+        /* =================================================== */
         .auth-buttons-container {
             position: fixed; 
             top: 20px;
@@ -302,24 +277,39 @@
         }
         
         .auth-btn {
-            padding: 10px 15px;
+            padding: 12px 18px; /* Увеличен паддинг */
             border: none;
             border-radius: 8px;
-            background: rgba(0, 123, 255, 0.9);
+            background: var(--system-blue); /* Чистый синий фон */
             color: white;
-            font-weight: 600;
+            font-weight: 700; /* Жирный шрифт */
             cursor: pointer;
-            transition: background 0.2s ease, transform 0.1s ease;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: background 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.4); /* Красивая тень */
         }
         
         .auth-btn:hover {
-            background: var(--system-blue);
-            transform: translateY(-1px);
+            background: var(--blue-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 123, 255, 0.5);
         }
         
         .auth-btn:active {
             transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(0, 123, 255, 0.4);
+        }
+
+        /* Отдельный стиль для кнопки Оплаты (зеленый) */
+        .auth-btn-payment {
+            background-color: var(--system-green) !important;
+            box-shadow: 0 4px 10px rgba(52, 199, 89, 0.4) !important;
+        }
+        .auth-btn-payment:hover {
+            background-color: var(--green-hover) !important;
+            box-shadow: 0 6px 15px rgba(52, 199, 89, 0.5) !important;
+        }
+        .auth-btn-payment:active {
+            box-shadow: 0 2px 5px rgba(52, 199, 89, 0.4) !important;
         }
 
         /* ... Стили форм и модальных окон (оставлены без изменений) ... */
@@ -524,6 +514,7 @@
 <body>
 
     <div class="auth-buttons-container">
+        <button class="auth-btn auth-btn-payment" onclick="alert('Переход на страницу оплаты. Настройте ссылку!')">Оплата</button>
         <button class="auth-btn" onclick="openModal('registrationModal')">Регистрация</button>
         <button class="auth-btn" onclick="openModal('loginModal')">Вход</button>
     </div>
@@ -1013,7 +1004,7 @@
                         showStatus('Неверный номер телефона или пароль.', "error", 'loginStatusMessage');
                     }
                 } catch (error) {
-                    showStatus(`❌ Произошла ошибка: ${error.message}`, "error", 'loginStatusMessage');
+                    showStatus(`❌ Ошибка входа: ${error.message}`, "error", 'loginStatusMessage');
                     console.error('Ошибка при входе:', error);
                 }
             });
