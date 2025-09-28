@@ -12,8 +12,10 @@
             --system-gray-light: #F2F2F7;
             --system-green: #34C759;
             --system-red: #FF3B30;
+            --system-purple: #5856D6;
             --blue-hover: #0056b3;
             --green-hover: #218838;
+            --purple-hover: #4341A5;
             --qr-color: #333;
             --text-dark: #333;
             --text-light: #666;
@@ -443,6 +445,7 @@
             .steps-container { gap: 30px; }
             .step-item { flex-basis: 90%; }
             .auth-buttons-container { top: 10px; right: 10px; }
+            .admin-button-container { top: 10px; left: 10px; }
             .client-greeting { font-size: 24px; }
             .playlist-info-page h2 { font-size: 18px; }
             .card-number-display { font-size: 20px; }
@@ -475,6 +478,13 @@
             box-shadow: 0 6px 15px rgba(0, 123, 255, 0.5);
         }
 
+        .admin-button-container {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 110;
+        }
+
         .auth-buttons-container {
             position: fixed; 
             top: 20px;
@@ -496,6 +506,7 @@
             box-shadow: 0 4px 10px rgba(0, 123, 255, 0.4);
             display: block; 
             opacity: 1;
+            text-decoration: none;
         }
         .auth-btn:hover {
             background: var(--blue-hover);
@@ -506,6 +517,16 @@
             transform: translateY(0);
             box-shadow: 0 2px 5px rgba(0, 123, 255, 0.4);
         }
+
+        .admin-btn {
+            background-color: var(--system-purple);
+            box-shadow: 0 4px 10px rgba(88, 86, 214, 0.4);
+        }
+        .admin-btn:hover {
+            background-color: var(--purple-hover);
+            box-shadow: 0 6px 15px rgba(88, 86, 214, 0.5);
+        }
+
         .auth-btn-payment {
             background-color: var(--system-green) !important;
             box-shadow: 0 4px 10px rgba(52, 199, 89, 0.4) !important;
@@ -888,6 +909,10 @@
 </head>
 <body>
     
+    <div class="admin-button-container">
+        <a href="https://moe-iptv.vercel.app/" class="auth-btn admin-btn">Админ</a>
+    </div>
+
     <div class="auth-buttons-container" id="authButtonsContainer">
         <button class="auth-btn auth-btn-payment" id="paymentBtnNav" onclick="alert('Переход на страницу оплаты. Настройте ссылку!')">Оплата</button>
         <button class="auth-btn" id="regBtn" onclick="openModal('registrationModal')">Регистрация</button>
@@ -1241,11 +1266,13 @@
                 document.getElementById('mainPageContent').style.display = 'none';
                 document.getElementById('channelListPage').style.display = 'block';
                 document.getElementById('authButtonsContainer').style.display = 'none';
+                document.querySelector('.admin-button-container').style.display = 'none';
             });
             document.getElementById('backToMainBtn').addEventListener('click', function() {
                 document.getElementById('channelListPage').style.display = 'none';
                 document.getElementById('mainPageContent').style.display = 'block';
                 document.getElementById('authButtonsContainer').style.display = 'flex';
+                document.querySelector('.admin-button-container').style.display = 'block';
             });
         });
 
