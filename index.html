@@ -20,6 +20,13 @@
         }
 
         /* Общие стили и фон */
+        html {
+            box-sizing: border-box;
+        }
+        *, *:before, *:after {
+            box-sizing: inherit;
+        }
+        
         body {
             font-family: 'Montserrat', sans-serif;
             background: #FFFFFF;
@@ -29,10 +36,18 @@
             min-height: 100vh;
             margin: 0;
             padding: 20px;
-            box-sizing: border-box;
             color: #333;
             flex-direction: column;
             position: relative;
+            overflow-x: hidden; 
+        }
+
+        .page-wrapper {
+            width: 100%;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         
         /* АНИМАЦИЯ ПОЯВЛЕНИЙ ЭЛЕМЕНТОВ */
@@ -51,7 +66,6 @@
             max-width: 700px;
             text-align: center;
             padding: 20px;
-            /* Убраны вертикальные отступы для лучшего центрирования flexbox */
             opacity: 0;
             animation: fadeIn 0.8s ease-out forwards;
             animation-delay: 0.2s;
@@ -85,7 +99,7 @@
             opacity: 0;
             animation: fadeIn 0.8s ease-out forwards;
             animation-delay: 0.5s;
-            margin-top: 40px; /* Добавлен верхний отступ */
+            margin-top: 40px;
             margin-bottom: 40px; 
         }
 
@@ -433,7 +447,7 @@
             .playlist-info-page h2 { font-size: 18px; }
             .card-number-display { font-size: 20px; }
             .playlist-info-actions, .copy-card-btn, .submit-btn-modern { max-width: 90%; }
-            #loginModal .input-group-modern { max-width: none; }
+            #loginModal .input-group-modern, #registrationModal .input-group-modern { max-width: none; }
         }
 
         /* =================================================== */
@@ -536,7 +550,7 @@
 
         .modal-content {
             background: white;
-            width: 90%;
+            width: 80%;
             max-width: 400px;
             border-radius: 14px;
             padding: 25px;
@@ -567,6 +581,12 @@
             opacity: 1;
             transform: scale(1.1);
             background: var(--system-red);
+        }
+        
+        #registrationModal .close-btn,
+        #loginModal .close-btn {
+            top: 10px;
+            right: 10px;
         }
 
         /* INPUTS AND STATUS MESSAGES */
@@ -603,8 +623,9 @@
             color: var(--system-blue);
         }
         
-        #loginModal .input-group-modern {
-            max-width: 66.6%; 
+        #loginModal .input-group-modern,
+        #registrationModal .input-group-modern {
+            max-width: 80%; 
             margin: 0 auto 35px; 
         }
 
@@ -615,9 +636,10 @@
             display: block;
         }
 
-        #loginBtn {
+        #loginBtn,
+        #registrationModal .submit-btn-modern {
             width: 100%;
-            max-width: 66.6%;
+            max-width: 80%;
             margin: 0 auto;
             display: block;
         }
@@ -661,7 +683,7 @@
         .header-title {
             flex-grow: 1;
             text-align: center;
-            padding-right: 90px; /* Добавляем отступ справа, равный ширине кнопки + отступ */
+            padding-right: 90px;
         }
         
         #backToMainBtn {
@@ -674,7 +696,7 @@
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.2s ease;
-            flex-shrink: 0; /* Запрещаем кнопке сжиматься */
+            flex-shrink: 0;
             width: 90px;
         }
         #backToMainBtn:hover {
@@ -691,8 +713,8 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
         #channelListPage .search-input {
-            width: 100%;
-            max-width: 1200px; /* ИЗМЕНЕНО */
+            width: 80%;
+            max-width: 1200px; 
             margin: 0 auto;
             display: block;
             padding: 0.9rem 1.2rem;
@@ -701,7 +723,7 @@
             font-size: 1.1rem;
             font-family: 'Montserrat', sans-serif;
             outline: none;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease, width 0.3s ease;
         }
         #channelListPage .search-input:focus {
             border-color: var(--system-blue);
@@ -781,7 +803,7 @@
         }
         #channelListPage .modal-content {
             background: white;
-            width: 90%;
+            width: 90%; /* ИЗМЕНЕНИЕ: Ширина возвращена к 90% */
             max-width: 600px;
             max-height: 90vh;
             overflow-y: auto;
@@ -790,6 +812,12 @@
             position: relative;
             animation: modalOpen 0.3s ease-out;
         }
+        
+        #channelListPage #channelModal .close-btn {
+            top: 15px;
+            right: 15px;
+        }
+        
         #channelListPage .modal h2 {
             margin-top: 0;
             margin-bottom: 2rem;
@@ -800,9 +828,10 @@
             font-size: 1.8rem;
         }
         #channelListPage .modal-search {
-            width: 100%;
+            width: 80%;
+            display: block;
+            margin: 0 auto 1.5rem;
             padding: 0.9rem 1.2rem;
-            margin-bottom: 1.5rem;
             border: 2px solid #ddd;
             border-radius: 10px;
             font-size: 1rem;
@@ -850,6 +879,10 @@
             #channelListPage .categories { padding: 1rem; gap: 1rem; }
             #channelListPage #search-results { padding: 1rem; }
             #channelListPage .channel-result { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+            
+            #channelListPage .search-container {
+                padding: 1rem;
+            }
         }
     </style>
 </head>
@@ -862,105 +895,107 @@
         <button class="auth-btn" id="logoutBtn" onclick="logout()">Выход</button>
     </div>
 
-    <div id="mainPageContent">
-        <div class="main-content" id="preAuthContent">
-            <h1>Доступное IPTV — 4000 каналов IPTV в отличном качестве с архивом.</h1>
-            <p>Современный сервис IPTV телевидения, который дает возможность смотреть каналы в Full HD и Ultra HD качестве. Плейлист IPTV телевидения насчитывает 4000 IPTV каналов. Присоединяйтесь к нам и желаем Вам приятного просмотра</p>
-            <button class="channel-list-btn" id="showChannelListBtn">Список каналов</button>
-        </div>
+    <div class="page-wrapper">
+        <div id="mainPageContent">
+            <div class="main-content" id="preAuthContent">
+                <h1>Доступное IPTV — 4000 каналов IPTV в отличном качестве с архивом.</h1>
+                <p>Современный сервис IPTV телевидения, который дает возможность смотреть каналы в Full HD и Ultra HD качестве. Плейлист IPTV телевидения насчитывает 4000 IPTV каналов. Присоединяйтесь к нам и желаем Вам приятного просмотра</p>
+                <button class="channel-list-btn" id="showChannelListBtn">Список каналов</button>
+            </div>
 
-        <div class="how-to-connect-block" id="howToConnectBlock">
-            <h2>Как подключить IPTV</h2>
-            <div class="steps-container">
-                <div class="step-item">
-                    <div class="step-number">1</div><div class="step-title">Регистрация</div>
-                    <div class="step-description">Нажмите кнопку Регистрация в правом верхнем углу</div>
+            <div class="how-to-connect-block" id="howToConnectBlock">
+                <h2>Как подключить IPTV</h2>
+                <div class="steps-container">
+                    <div class="step-item">
+                        <div class="step-number">1</div><div class="step-title">Регистрация</div>
+                        <div class="step-description">Нажмите кнопку Регистрация в правом верхнем углу</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-number">2</div><div class="step-title">Оплата</div>
+                        <div class="step-description">Оплатить подписку</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-number">3</div><div class="step-title">Плейлист</div>
+                        <div class="step-description">Скачать плейлист</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-number">4</div><div class="step-title">Загрузка</div>
+                        <div class="step-description">Загрузить плейлист в Ваше устройство</div>
+                    </div>
                 </div>
-                <div class="step-item">
-                    <div class="step-number">2</div><div class="step-title">Оплата</div>
-                    <div class="step-description">Оплатить подписку</div>
+            </div>
+            
+            <div class="where-it-works-block" id="whereItWorksBlock">
+                <h2>Где работает IPTV?</h2>
+                <div class="devices-container">
+                    <div class="device-item">
+                        <div class="device-icon"><img src="https://iptvclient.vercel.app/smartphone-call.png" alt="Смартфон"></div>
+                        <div class="device-name">На смартфоне</div>
+                    </div>
+                    <div class="device-item">
+                        <div class="device-icon"><img src="https://iptvclient.vercel.app/computer-tablet.png" alt="Планшет"></div>
+                        <div class="device-name">На планшете</div>
+                    </div>
+                    <div class="device-item">
+                        <div class="device-icon"><img src="https://iptvclient.vercel.app/tv-box.png" alt="ТВ приставка"></div>
+                        <div class="device-name">На ТВ приставке</div>
+                    </div>
+                    <div class="device-item">
+                        <div class="device-icon"><img src="https://iptvclient.vercel.app/tv.png" alt="Smart TV"></div>
+                        <div class="device-name">На Smart TV телевизоре</div>
+                    </div>
+                    <div class="device-item">
+                        <div class="device-icon"><img src="https://iptvclient.vercel.app/tv-tuner.png" alt="Спутниковый тюнер"></div>
+                        <div class="device-name">На спутниковом тюнере</div>
+                    </div>
+                    <div class="device-item">
+                        <div class="device-icon"><img src="https://iptvclient.vercel.app/laptop.png" alt="Компьютер"></div>
+                        <div class="device-name">На компьютере и ноутбуке</div>
+                    </div>
                 </div>
-                <div class="step-item">
-                    <div class="step-number">3</div><div class="step-title">Плейлист</div>
-                    <div class="step-description">Скачать плейлист</div>
+            </div>
+
+            <div class="post-auth-layout">
+                <div id="playlistInfoPage" class="playlist-info-page">
+                    <p class="client-greeting" id="clientNameGreeting"></p>
+                    <h2 style="font-weight: 600;">Ваш плейлист</h2> 
+                    <p class="expiration-info" id="expirationMessage"></p>
+                    <p style="color: #666; margin-bottom: 25px;">Используйте ссылку ниже для подключения к IPTV-сервису на вашем устройстве.</p>
+                    <div class="playlist-link-box" id="finalPlaylistLink">Загрузка...</div>
+                    <div class="playlist-info-actions">
+                        <button id="copyLinkBtnPage" style="background: var(--system-blue);">Копировать ссылку</button>
+                        <button id="downloadLinkBtnPage" style="background: var(--system-green);">Скачать файл</button>
+                    </div>
                 </div>
-                <div class="step-item">
-                    <div class="step-number">4</div><div class="step-title">Загрузка</div>
-                    <div class="step-description">Загрузить плейлист в Ваше устройство</div>
+                <div id="paymentBlock" class="payment-block playlist-info-page">
+                    <h2>Оплата подписки</h2>
+                    <p class="payment-amount">Оплатить 150 грн</p>
+                    <div class="card-number-display" id="cardNumberDisplay">5168752084846610</div>
+                    <button class="copy-card-btn" onclick="copyToClipboard('5168752084846610', event)">Копировать номер</button>
+                    <p style="color: #666; margin-top: 20px; margin-bottom: 25px; font-size: 14px;">Скопируйте номер карты, чтобы оплатить подписку.</p>
+                    <button class="submit-btn-modern payment-btn" onclick="alert('Переход к платежной системе!')">Перейти к оплате</button>
                 </div>
             </div>
         </div>
         
-        <div class="where-it-works-block" id="whereItWorksBlock">
-            <h2>Где работает IPTV?</h2>
-            <div class="devices-container">
-                <div class="device-item">
-                    <div class="device-icon"><img src="https://iptvclient.vercel.app/smartphone-call.png" alt="Смартфон"></div>
-                    <div class="device-name">На смартфоне</div>
-                </div>
-                <div class="device-item">
-                    <div class="device-icon"><img src="https://iptvclient.vercel.app/computer-tablet.png" alt="Планшет"></div>
-                    <div class="device-name">На планшете</div>
-                </div>
-                <div class="device-item">
-                    <div class="device-icon"><img src="https://iptvclient.vercel.app/tv-box.png" alt="ТВ приставка"></div>
-                    <div class="device-name">На ТВ приставке</div>
-                </div>
-                <div class="device-item">
-                    <div class="device-icon"><img src="https://iptvclient.vercel.app/tv.png" alt="Smart TV"></div>
-                    <div class="device-name">На Smart TV телевизоре</div>
-                </div>
-                <div class="device-item">
-                    <div class="device-icon"><img src="https://iptvclient.vercel.app/tv-tuner.png" alt="Спутниковый тюнер"></div>
-                    <div class="device-name">На спутниковом тюнере</div>
-                </div>
-                <div class="device-item">
-                    <div class="device-icon"><img src="https://iptvclient.vercel.app/laptop.png" alt="Компьютер"></div>
-                    <div class="device-name">На компьютере и ноутбуке</div>
-                </div>
+        <div id="channelListPage" style="display: none;">
+            <header>
+                <button id="backToMainBtn">Назад</button>
+                <span class="header-title">Плейлист 4030 каналов</span>
+            </header>
+            <div class="search-container">
+                <input type="text" class="search-input" id="main-search" placeholder="Поиск по всем каналам...">
             </div>
-        </div>
+            <div class="categories" id="categories"></div>
+            <div id="search-results"></div>
 
-        <div class="post-auth-layout">
-            <div id="playlistInfoPage" class="playlist-info-page">
-                <p class="client-greeting" id="clientNameGreeting"></p>
-                <h2 style="font-weight: 600;">Ваш плейлист</h2> 
-                <p class="expiration-info" id="expirationMessage"></p>
-                <p style="color: #666; margin-bottom: 25px;">Используйте ссылку ниже для подключения к IPTV-сервису на вашем устройстве.</p>
-                <div class="playlist-link-box" id="finalPlaylistLink">Загрузка...</div>
-                <div class="playlist-info-actions">
-                    <button id="copyLinkBtnPage" style="background: var(--system-blue);">Копировать ссылку</button>
-                    <button id="downloadLinkBtnPage" style="background: var(--system-green);">Скачать файл</button>
+            <div class="modal" id="channelModal">
+                <div class="modal-content">
+                    <span class="close-btn" onclick="closeChannelModal()">×</span>
+                    <h2 id="modal-title"></h2>
+                    <input type="text" class="modal-search" id="modal-search" placeholder="Поиск в этой категории...">
+                    <div id="channel-list"></div>
                 </div>
-            </div>
-            <div id="paymentBlock" class="payment-block playlist-info-page">
-                <h2>Оплата подписки</h2>
-                <p class="payment-amount">Оплатить 150 грн</p>
-                <div class="card-number-display" id="cardNumberDisplay">5168752084846610</div>
-                <button class="copy-card-btn" onclick="copyToClipboard('5168752084846610', event)">Копировать номер</button>
-                <p style="color: #666; margin-top: 20px; margin-bottom: 25px; font-size: 14px;">Скопируйте номер карты, чтобы оплатить подписку.</p>
-                <button class="submit-btn-modern payment-btn" onclick="alert('Переход к платежной системе!')">Перейти к оплате</button>
-            </div>
-        </div>
-    </div>
-    
-    <div id="channelListPage" style="display: none;">
-        <header>
-            <button id="backToMainBtn">Назад</button>
-            <span class="header-title">Плейлист 4030 каналов</span>
-        </header>
-        <div class="search-container">
-            <input type="text" class="search-input" id="main-search" placeholder="Поиск по всем каналам...">
-        </div>
-        <div class="categories" id="categories"></div>
-        <div id="search-results"></div>
-
-        <div class="modal" id="channelModal">
-            <div class="modal-content">
-                <span class="close-btn" onclick="closeChannelModal()">×</span>
-                <h2 id="modal-title"></h2>
-                <input type="text" class="modal-search" id="modal-search" placeholder="Поиск в этой категории...">
-                <div id="channel-list"></div>
             </div>
         </div>
     </div>
@@ -969,7 +1004,7 @@
     <div id="registrationModal" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal('registrationModal')">&times;</span>
-            <h1>Регистрация</h1>
+            <h1 style="text-align: center; margin-bottom: 20px;">Регистрация</h1>
             <form id="registrationForm" onsubmit="return false;">
                 <div class="input-group-modern"><input type="text" id="clientName" required placeholder=" "><label for="clientName">Ваше имя</label></div>
                 <div class="input-group-modern"><input type="tel" id="clientPhone" required placeholder=" "><label for="clientPhone">Номер телефона</label></div>
