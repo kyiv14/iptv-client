@@ -526,15 +526,6 @@
             background-color: var(--purple-hover);
             box-shadow: 0 6px 15px rgba(88, 86, 214, 0.5);
         }
-
-        .auth-btn-payment {
-            background-color: var(--system-green) !important;
-            box-shadow: 0 4px 10px rgba(52, 199, 89, 0.4) !important;
-        }
-        .auth-btn-payment:hover {
-            background-color: var(--green-hover) !important;
-            box-shadow: 0 6px 15px rgba(52, 199, 89, 0.5) !important;
-        }
         
         #logoutBtn {
              background-color: var(--system-red) !important;
@@ -914,7 +905,6 @@
     </div>
 
     <div class="auth-buttons-container" id="authButtonsContainer">
-        <button class="auth-btn auth-btn-payment" id="paymentBtnNav" onclick="alert('Переход на страницу оплаты. Настройте ссылку!')">Оплата</button>
         <button class="auth-btn" id="regBtn" onclick="openModal('registrationModal')">Регистрация</button>
         <button class="auth-btn" id="loginBtnNav" onclick="openModal('loginModal')">Вход</button>
         <button class="auth-btn" id="logoutBtn" onclick="logout()">Выход</button>
@@ -1124,7 +1114,7 @@
             logoutBtn.style.opacity = '0'; 
             setTimeout(() => {
                 logoutBtn.style.display = 'none';
-                ['regBtn', 'loginBtnNav', 'paymentBtnNav'].forEach(id => {
+                ['regBtn', 'loginBtnNav'].forEach(id => {
                     const btn = document.getElementById(id);
                     btn.style.display = 'block';
                     btn.style.opacity = '1';
@@ -1137,7 +1127,7 @@
             document.querySelector('.post-auth-layout').style.display = 'flex';
             document.getElementById('playlistInfoPage').style.display = 'block';
             document.getElementById('paymentBlock').style.display = 'block';
-            ['regBtn', 'loginBtnNav', 'paymentBtnNav'].forEach(id => document.getElementById(id).style.display = 'none');
+            ['regBtn', 'loginBtnNav'].forEach(id => document.getElementById(id).style.display = 'none');
             const logoutBtn = document.getElementById('logoutBtn');
             logoutBtn.style.display = 'block';
             setTimeout(() => { logoutBtn.style.opacity = '1'; }, 100);
