@@ -990,7 +990,7 @@
                     <div class="card-number-display" id="cardNumberDisplay">5168752084846610</div>
                     <button class="copy-card-btn" onclick="copyToClipboard('5168752084846610', event)">Копировать номер</button>
                     <p style="color: #666; margin-top: 20px; margin-bottom: 25px; font-size: 14px;">Скопируйте номер карты, чтобы оплатить подписку.</p>
-                    <button class="submit-btn-modern payment-btn" onclick="alert('Переход к платежной системе!')">Перейти к оплате</button>
+                    <button class="submit-btn-modern payment-btn" onclick="alert('Перейти к платежной системе!')">Перейти к оплате</button>
                 </div>
             </div>
         </div>
@@ -1057,6 +1057,10 @@
             samplePlaylist: "https://moe-iptv.vercel.app/sample.m3u", 
             baseUrl: "https://moe-iptv.vercel.app/"
         };
+        
+        // --- КОНСТАНТЫ TELEGRAM ---
+        const TELEGRAM_BOT_TOKEN = '8457795718:AAH60EaVEHhS2AM1YJy1CQUHt8NMN4d2z34';
+        const TELEGRAM_CHAT_ID = '351875366';
         
         let currentClientData = null; 
         let currentPlaylistResult = null;
@@ -1195,6 +1199,27 @@
             const isgdUrl = await createIsGdShortUrl(phone);
             return { isgdUrl, m3uFilename: `${cleanPhone}.m3u`, m3uContent: content };
         }
+        
+        // --- ОБНОВЛЕННАЯ ФУНКЦИЯ: ОТПРАВКА В TELEGRAM С ДАТОЙ ---
+        async function sendRegistrationToTelegram(clientData) {
+            // Форматируем дату регистрации для сообщения
+            const regDate = new Date(clientData.registration_date).toLocaleDateString('ru-RU', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
+            
+            const message = `🔔 НОВАЯ РЕГИСТРАЦИЯ! 🔔\n\nИмя: ${clientData.name}\nТелефон: ${clientData.phone}\nДата: ${regDate}`;
+            const apiUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHAT_ID}&text=${encodeURIComponent(message)}&parse_mode=HTML`;
+            
+            try {
+                const response = await fetch(apiUrl, { method: 'POST' });
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error('Ошибка Telegram API:', errorData);
+                }
+                console.log('Данные успешно отправлены в Telegram.');
+            } catch (error) {
+                console.error('Ошибка при отправке в Telegram:', error);
+            }
+        }
+        // --- КОНЕЦ ОБНОВЛЕННОЙ ФУНКЦИИ ---
 
         async function saveClientData(client) {
             let { clients: currentClients, sha } = await loadClientsFromGitHub();
@@ -1222,8 +1247,13 @@
                     showStatus("Проверьте поля: заполнены, пароли совпадают (мин. 6 симв.), телефон (мин. 10 цифр).", "error");
                     return;
                 }
+                // Генерируем данные клиента, включая дату регистрации
                 const newClient = { name, phone: cleanPhoneDigits, password, key: '0000000000', paymentDate: new Date().toISOString().split('T')[0], months: '1', registration_date: new Date().toISOString() };
                 try {
+                    // --- ВЫЗОВ ОБНОВЛЕННОЙ ФУНКЦИИ TELEGRAM ---
+                    await sendRegistrationToTelegram(newClient);
+                    // --- КОНЕЦ ВЫЗОВА ---
+                    
                     currentPlaylistResult = await createPlaylist(phone, newClient.key);
                     await saveClientData(newClient);
                     currentClientData = newClient;
