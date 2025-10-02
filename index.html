@@ -1146,10 +1146,16 @@
             
             document.getElementById('clientNameGreeting').textContent = `Привет, ${currentClientData.name || 'Клиент'}!`;
             document.getElementById('expirationMessage').textContent = `Ваш тариф ${getExpirationDays(currentClientData.paymentDate, currentClientData.months)}.`;
+            
+            // Здесь отображаем короткую ссылку (которая ведет на API обработчик)
             document.getElementById('finalPlaylistLink').textContent = currentPlaylistResult.isgdUrl;
             
-            const tempUrl = URL.createObjectURL(new Blob([currentPlaylistResult.m3uContent], { type: 'application/x-mpegurl' }));
+            // Кнопка копирования теперь копирует короткую ссылку
             document.getElementById('copyLinkBtnPage').onclick = (e) => copyToClipboard(currentPlaylistResult.isgdUrl, e);
+            
+            // Кнопка "Скачать файл" для демонстрации. 
+            // В реальности клиент должен скачивать основной плейлист только после оплаты.
+            const tempUrl = URL.createObjectURL(new Blob([currentPlaylistResult.m3uContent], { type: 'application/x-mpegurl' }));
             document.getElementById('downloadLinkBtnPage').onclick = () => forceDownload(tempUrl, `${currentPlaylistResult.m3uFilename}`);
         }
 
@@ -1175,33 +1181,53 @@
             throw new Error(`Ошибка загрузки: ${response.statusText}`);
         }
 
+        // =================================================================
+        // ИЗМЕНЕНИЕ: Функция создания короткой ссылки
+        // Теперь она ведет на динамический API-обработчик Vercel.
+        // =================================================================
         async function createIsGdShortUrl(phone) {
             const cleanPhone = extractPhoneNumber(phone);
-            const longUrl = `${REPO_CONFIG.baseUrl}${cleanPhone}.m3u`;
+            
+            // Длинная ссылка ведет на API-обработчик (Serverless Function)
+            const longUrl = `${REPO_CONFIG.baseUrl}api/playlist_link?phone=${cleanPhone}`;
+            
             try {
                 const apiUrl = `https://is.gd/create.php?format=json&url=${encodeURIComponent(longUrl)}&shorturl=${cleanPhone}`;
                 const response = await fetch(apiUrl);
                 if (!response.ok) throw new Error("Сервис is.gd недоступен.");
                 const data = await response.json();
+                
+                // Если is.gd возвращает ошибку, часто это означает, что ссылка уже есть.
                 return data.errorcode ? `https://is.gd/${cleanPhone}` : data.shorturl;
-            } catch (error) { console.error('Ошибка создания is.gd ссылки:', error); return longUrl; }
+            } catch (error) { 
+                console.error('Ошибка создания is.gd ссылки:', error); 
+                // В случае ошибки возвращаем длинную ссылку, чтобы клиент мог скопировать хотя бы ее
+                return longUrl; 
+            }
         }
 
         async function createPlaylist(phone, key) {
             const cleanPhone = extractPhoneNumber(phone);
             if (cleanPhone.length < 10) throw new Error("Номер должен содержать минимум 10 цифр.");
+            
+            // Плейлист создается как статичный файл для основного доступа
             const filename = `public/${cleanPhone}.m3u`;
             const response = await fetch(REPO_CONFIG.samplePlaylist);
             if (!response.ok) throw new Error("Не удалось загрузить образец плейлиста sample.m3u.");
+            
             let content = await response.text();
             content = content.replace(/\/iptv\/\w+\//g, `/iptv/${key}/`);
+            
             const sha = await getFileSha(filename);
             const uploadResponse = await fetch(`https://api.github.com/repos/${REPO_CONFIG.owner}/${REPO_CONFIG.repo}/contents/${filename}`, {
                 method: 'PUT',
                 headers: { 'Authorization': `Bearer ${getGitHubToken()}`, 'Content-Type': 'application/json', 'Accept': 'application/vnd.github+json' },
                 body: JSON.stringify({ message: `Обновление плейлиста: ${cleanPhone}`, content: btoa(unescape(encodeURIComponent(content))), branch: REPO_CONFIG.branch, sha: sha })
             });
+            
             if (!uploadResponse.ok) throw new Error((await uploadResponse.json()).message || "Ошибка при загрузке плейлиста");
+            
+            // Возвращаем короткую ссылку, созданную на основе динамического обработчика
             const isgdUrl = await createIsGdShortUrl(phone);
             return { isgdUrl, m3uFilename: `${cleanPhone}.m3u`, m3uContent: content };
         }
@@ -1253,16 +1279,16 @@
                     showStatus("Проверьте поля: заполнены, пароли совпадают (мин. 6 симв.), телефон (мин. 10 цифр).", "error");
                     return;
                 }
-                // Генерируем данные клиента, включая дату регистрации
+                // Генерируем данные клиента, включая точную дату и время регистрации
                 const newClient = { name, phone: cleanPhoneDigits, password, key: '0000000000', paymentDate: new Date().toISOString().split('T')[0], months: '1', registration_date: new Date().toISOString() };
                 try {
-                    // --- ВЫЗОВ ОБНОВЛЕННОЙ ФУНКЦИИ TELEGRAM ---
                     await sendRegistrationToTelegram(newClient);
-                    // --- КОНЕЦ ВЫЗОВА ---
                     
+                    // Создаем плейлист и короткую ссылку
                     currentPlaylistResult = await createPlaylist(phone, newClient.key);
                     await saveClientData(newClient);
                     currentClientData = newClient;
+                    
                     document.getElementById('registrationForm').reset();
                     closeModal('registrationModal');
                     document.getElementById('loginPhone').value = phone; 
@@ -1282,6 +1308,7 @@
                     const client = clients.find(c => c.phone === cleanLoginPhoneDigits && c.password === loginPassword);
                     if (client) {
                         currentClientData = client;
+                        // Создаем плейлист и короткую ссылку
                         currentPlaylistResult = await createPlaylist(loginPhone, client.key || '0000000000');
                         closeModal('loginModal');
                         showPlaylistPage();
