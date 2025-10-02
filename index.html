@@ -1150,13 +1150,15 @@
             // Здесь отображаем короткую ссылку (которая ведет на API обработчик)
             document.getElementById('finalPlaylistLink').textContent = currentPlaylistResult.isgdUrl;
             
-            // Кнопка копирования теперь копирует короткую ссылку
+            // КНОПКА КОПИРОВАТЬ: Копирует короткую ссылку
             document.getElementById('copyLinkBtnPage').onclick = (e) => copyToClipboard(currentPlaylistResult.isgdUrl, e);
             
-            // Кнопка "Скачать файл" для демонстрации. 
-            // В реальности клиент должен скачивать основной плейлист только после оплаты.
-            const tempUrl = URL.createObjectURL(new Blob([currentPlaylistResult.m3uContent], { type: 'application/x-mpegurl' }));
-            document.getElementById('downloadLinkBtnPage').onclick = () => forceDownload(tempUrl, `${currentPlaylistResult.m3uFilename}`);
+            // КНОПКА СКАЧАТЬ: Создаем прямую ссылку на СТАТИЧЕСКИЙ файл ОСНОВНОГО плейлиста для скачивания
+            const downloadUrl = `${REPO_CONFIG.baseUrl}${currentClientData.phone}.m3u`;
+            document.getElementById('downloadLinkBtnPage').onclick = () => {
+                // Прямое скачивание основного файла
+                window.open(downloadUrl, '_blank'); 
+            };
         }
 
         async function getFileSha(filename) {
